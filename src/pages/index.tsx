@@ -1,7 +1,8 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import NavBar from "../components/NavBar/NavBar";
+import { CssBaseline } from "@mui/material";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import NavBar from "../components/AppBar/AppBar";
 
 const Home: NextPage = () => {
   return (
@@ -13,7 +14,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <NavBar></NavBar>
+        <NavBar />
       </main>
 
       <footer></footer>
@@ -21,4 +22,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home
+export default Home;

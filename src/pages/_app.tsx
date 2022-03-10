@@ -11,6 +11,7 @@ import "@fontsource/roboto/700.css";
 import createEmotionCache from "../utility/createEmotionCache";
 import lightThemeOptions from "../styles/themes/lightThemeOptions";
 import "../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
@@ -20,13 +21,19 @@ const clientSideEmotionCache = createEmotionCache();
 const lightTheme = createTheme(lightThemeOptions);
 
 const MyApp = (props: MyAppProps) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const {
+    Component,
+    emotionCache = clientSideEmotionCache,
+    pageProps: { session, ...pageProps },
+  } = props;
 
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
-        <Component {...pageProps} />
+        <SessionProvider session={session}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </SessionProvider>
       </ThemeProvider>
     </CacheProvider>
   );
