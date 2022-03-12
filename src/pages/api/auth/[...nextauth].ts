@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
-import { RouteUrls, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from "../../../utility/config";
+import { RouteUrls } from "../../../utility/config";
 import spotifyApi, { LOGIN_URL } from "../../../utility/spotify";
 
 const refreshAccessToken = async (token: JWT) => {
@@ -26,8 +26,8 @@ const refreshAccessToken = async (token: JWT) => {
 export default NextAuth({
   providers: [
     SpotifyProvider({
-      clientId: SPOTIFY_CLIENT_ID,
-      clientSecret: SPOTIFY_CLIENT_SECRET,
+      clientId: process.env.SPOTIFY_PUBLIC_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_PUBLIC_CLIENT_SECRET,
       authorization: LOGIN_URL,
     }),
   ],
