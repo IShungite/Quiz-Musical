@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import Head from "next/head";
 import React from "react";
 import AppBar from "../AppBar/AppBar";
@@ -13,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <main>
         <AppBar />
-        {children}
+        <Container>{children}</Container>
       </main>
 
       <footer></footer>

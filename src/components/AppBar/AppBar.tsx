@@ -5,8 +5,18 @@ import { useRouter } from "next/router";
 import React from "react";
 import { RouteUrls } from "../../utility/config";
 
-const pagesLeft = [{ name: "Accueil", url: RouteUrls.Index }];
-const pagesRight = [{ name: "Connexion", url: RouteUrls.Login }];
+type PageInfo = {
+  name: string;
+  url: string;
+};
+
+const pagesLeft: PageInfo[] = [{ name: "Accueil", url: RouteUrls.Index }];
+const pagesRight: PageInfo[] = [{ name: "Connexion", url: RouteUrls.Login }];
+
+const pagesLeftLogin: PageInfo[] = [
+  { name: "Accueil", url: RouteUrls.Index },
+  { name: "Créer un quiz", url: RouteUrls.NewQuiz },
+];
 
 export default function AppBar() {
   const router = useRouter();
@@ -83,7 +93,7 @@ export default function AppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pagesLeft.map((page) => (
+              {(session ? pagesLeftLogin : pagesLeft).map((page) => (
                 <MenuItem key={page.name} onClick={() => handleClickNavItem(page.url)}>
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
@@ -95,7 +105,7 @@ export default function AppBar() {
             Game-Sense
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pagesLeft.map((page) => (
+            {(session ? pagesLeftLogin : pagesLeft).map((page) => (
               <Button key={page.name} onClick={() => handleClickNavItem(page.url)} sx={{ my: 2, color: "white", display: "block" }}>
                 {page.name}
               </Button>
