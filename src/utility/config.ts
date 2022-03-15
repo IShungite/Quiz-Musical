@@ -1,5 +1,6 @@
 export enum RouteUrls {
-  Home = "/",
-  Login = "/login",
-  Logout = "/logout",
+  Index = "/",
+  Home = "/home",
+  Login = "/auth/login",
+  Logout = "/auth/logout",
 }

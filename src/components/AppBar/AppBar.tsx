@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { RouteUrls } from "../../utility/config";
 
-const pagesLeft = [{ name: "Accueil", url: RouteUrls.Home }];
+const pagesLeft = [{ name: "Accueil", url: RouteUrls.Index }];
 const pagesRight = [{ name: "Connexion", url: RouteUrls.Login }];
 
 export default function AppBar() {
