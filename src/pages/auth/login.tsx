@@ -3,9 +3,13 @@ import { ClientSafeProvider, getProviders, getSession, LiteralUnion, signIn } fr
 import { BuiltInProviderType } from "next-auth/providers";
 import { Box, Button, Typography } from "@mui/material";
 import { RouteUrls } from "../../utility/config";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
-export default function Login({ providers }: { providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> }) {
+type Props = {
+  providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
+};
+
+export default function Login({ providers }: Props) {
   return (
     <Box>
       <Box>login</Box>

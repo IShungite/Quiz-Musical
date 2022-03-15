@@ -17,12 +17,6 @@ export default function AppBar() {
 
   const settings = [
     {
-      name: "Profile",
-      callback: () => {
-        console.log("Profile");
-      },
-    },
-    {
       name: "Logout",
       callback: () => {
         signOut();
