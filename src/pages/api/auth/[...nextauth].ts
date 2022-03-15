@@ -50,7 +50,7 @@ export default NextAuth({
 
       if (Date.now() < token.accessTokenExpires) return token;
 
-      return await refreshAccessToken(token);
+      return refreshAccessToken(token);
     },
 
     async session({ session, token }) {
