@@ -3,6 +3,8 @@ import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputBase } from "@mui/material";
 import useSpotify from "../../hooks/useSpotify";
+import { useDebouncedCallback } from "use-debounce";
+import { Playlist } from "../../models/Playlist";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -48,33 +50,40 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function SearchBar() {
   const spotifyApi = useSpotify();
 
-  const [search, setSearch] = useState("");
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  useEffect(() => {
-    const fetchPlaylists = async () => {
-      const playlists = await fetch(`https://api.spotify.com/v1/search?q=${search}&type=playlist&limit=10`, {
-        headers: {
-          Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-        },
-      }).then((res) => res.json());
+  const debounced = useDebouncedCallback((value) => {
+    if (value) {
+      fetchPlaylists(value);
+    } else {
+      setPlaylists([]);
+    }
+  }, 1000);
 
-      console.log(playlists);
-    };
-
-    fetchPlaylists();
-  }, [search, spotifyApi]);
+  const fetchPlaylists = async (searchTerm: string) => {
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=playlist&limit=10`, {
+      headers: {
+        Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
+      },
+    }).then((res) => res.json());
+    setPlaylists(response.playlists.items);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-    setSearch(event.target.value);
+    debounced(event.target.value);
   };
 
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase onChange={handleChange} placeholder="Search…" inputProps={{ "aria-label": "search" }} />
-    </Search>
+    <>
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase onChange={handleChange} placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+      </Search>
+      {playlists.map((playlist) => (
+        <div key={playlist.id}>{playlist.name}</div>
+      ))}
+    </>
   );
 }
