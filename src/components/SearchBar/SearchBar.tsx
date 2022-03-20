@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { InputBase } from "@mui/material";
+import { Grid, InputBase } from "@mui/material";
 import useSpotify from "../../hooks/useSpotify";
 import { useDebouncedCallback } from "use-debounce";
 import { Playlist } from "../../models/Playlist";
+import MusicCard from "../MusicCard/MusicCard";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,7 +62,7 @@ export default function SearchBar() {
   }, 1000);
 
   const fetchPlaylists = async (searchTerm: string) => {
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=playlist&limit=10`, {
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=playlist&limit=9`, {
       headers: {
         Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
       },
@@ -69,21 +70,27 @@ export default function SearchBar() {
     setPlaylists(response.playlists.items);
   };
 
+  // console.log(playlists);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     debounced(event.target.value);
   };
 
   return (
     <>
-      <Search>
+      <Search sx={{ mb: 2 }}>
         <SearchIconWrapper>
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase onChange={handleChange} placeholder="Search…" inputProps={{ "aria-label": "search" }} />
       </Search>
-      {playlists.map((playlist) => (
-        <div key={playlist.id}>{playlist.name}</div>
-      ))}
+      <Grid container spacing={2}>
+        {playlists.map((playlist) => (
+          <Grid item key={playlist.id}>
+            <MusicCard playlist={playlist} />
+          </Grid>
+        ))}
+      </Grid>
     </>
   );
 }

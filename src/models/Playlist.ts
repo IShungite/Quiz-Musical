@@ -7,7 +7,7 @@ export type Playlist = {
   name: string;
   type: string;
   uri: string;
-  owner: unknown;
+  owner: Owner;
   tracks: unknown;
   external_urls: unknown;
 };
@@ -16,4 +16,13 @@ type PlaylistImage = {
   height: null | number;
   width: null | number;
   url: string;
+};
+
+type Owner = {
+  display_name: string;
+  external_url: unknown;
+  href: string;
+  primary_color: unknown;
+  public: unknown;
+  snapshot_id: string;
 };
