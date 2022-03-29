@@ -6,6 +6,8 @@ import useSpotify from "../../hooks/useSpotify";
 import { useDebouncedCallback } from "use-debounce";
 import { Playlist } from "../../models/Playlist";
 import MusicCard from "../MusicCard/MusicCard";
+import useDeezer from "../../utility/deezerApi";
+import deezerApi from "../../utility/deezerApi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,28 +51,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchBar() {
-  const spotifyApi = useSpotify();
-
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const debounced = useDebouncedCallback((value) => {
+  const debounced = useDebouncedCallback(async (value) => {
     if (value) {
-      fetchPlaylists(value);
+      const playlistsFetched = await deezerApi.searchPlaylists(value);
+      setPlaylists(playlistsFetched);
     } else {
       setPlaylists([]);
     }
   }, 1000);
-
-  const fetchPlaylists = async (searchTerm: string) => {
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=playlist&limit=9`, {
-      headers: {
-        Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
-      },
-    }).then((res) => res.json());
-    setPlaylists(response.playlists.items);
-  };
-
-  // console.log(playlists);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     debounced(event.target.value);

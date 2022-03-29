@@ -1,71 +1,45 @@
-export type Tracks = {
-  href: string;
-  items: Track[];
-};
-
 export type Track = {
-  added_at: Date;
-  added_by: unknown;
-  is_local: boolean;
-  primary_color: unknown;
-  track: TrackInfo;
-};
-
-type TrackInfo = {
+  checksum: string;
   album: Album;
-  artists: Artist[];
-  available_markets: string[];
-  disc_number: number;
-  duration_ms: number;
-  explicit: boolean;
-  external_ids: ExternalIds;
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  is_playable: boolean;
-  name: string;
-  popularity: number;
-  preview_url: string;
-  track_number: number;
+  artist: Artist;
+  duration: number;
+  explicit_content_cover: number;
+  explicit_content_lyrics: number;
+  explicit_lyrics: boolean;
+  id: number;
+  link: string;
+  md5_image: string;
+  preview: string;
+  rank: number;
+  readable: boolean;
+  time_add: Date;
+  title: string;
+  title_short: string;
   type: string;
-  uri: string;
-};
-
-type ExternalIds = {
-  isrc: string;
 };
 
 type Album = {
-  album_type: string;
-  artists: Artist[];
-  available_markets: string[];
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
-  images: Image[];
-  name: string;
-  release_date: string;
-  release_date_precision: string;
-  total_tracks: number;
+  id: number;
+  title: string;
+  cover: string;
+  cover_small: string;
+  cover_medium: string;
+  cover_big: string;
+  cover_xl: string;
+  md5_image: string;
+  tracklist: string;
   type: string;
-  uri: string;
 };
 
 type Artist = {
-  external_urls: ExternalUrls;
-  href: string;
-  id: string;
+  id: number;
+  link: string;
   name: string;
+  picture: string;
+  picture_small: string;
+  picture_medium: string;
+  picture_big: string;
+  picture_xl: string;
+  tracklist: string;
   type: string;
-  uri: string;
-};
-
-type ExternalUrls = {
-  spotify: string;
-};
-
-export type Image = {
-  height: null | number;
-  width: null | number;
-  url: string;
 };
