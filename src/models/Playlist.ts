@@ -1,21 +1,22 @@
+import { Image } from "./Tracks";
+
 export type Playlist = {
   collaborative: boolean;
   description: string;
   href: string;
   id: string;
-  images: PlaylistImage[];
+  images: Image[];
   name: string;
   type: string;
   uri: string;
   owner: Owner;
-  tracks: unknown;
+  tracks: PlaylistTracks;
   external_urls: unknown;
 };
 
-type PlaylistImage = {
-  height: null | number;
-  width: null | number;
-  url: string;
+type PlaylistTracks = {
+  href: string;
+  total: number;
 };
 
 type Owner = {
