@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Grid, InputBase } from "@mui/material";
-import useSpotify from "../../hooks/useSpotify";
 import { useDebouncedCallback } from "use-debounce";
 import { Playlist } from "../../models/Playlist";
 import MusicCard from "../MusicCard/MusicCard";
-import useDeezer from "../../utility/deezerApi";
 import deezerApi from "../../utility/deezerApi";
 
 const Search = styled("div")(({ theme }) => ({
