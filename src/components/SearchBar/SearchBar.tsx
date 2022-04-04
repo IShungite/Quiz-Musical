@@ -51,7 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function SearchBar() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const debounced = useDebouncedCallback(async (value) => {
+  const debounced = useDebouncedCallback(async (value: string) => {
     if (value) {
       const playlistsFetched = await deezerApi.searchPlaylists(value);
       setPlaylists(playlistsFetched);

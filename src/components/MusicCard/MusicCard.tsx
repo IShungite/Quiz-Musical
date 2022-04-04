@@ -1,27 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import { Playlist } from "../../models/Playlist";
-import deezerApi from "../../utility/deezerApi";
+import { useRouter } from "next/router";
+import { RouteUrls } from "../../utility/config";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import { clearState, createGame, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { CreateGameDto, GameMode } from "../../models/Game";
 
 type Props = {
   playlist: Playlist;
 };
 
 export default function MusicCard({ playlist }: Props) {
-  const playSong = () => {
-    fetchTracks();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const { status, currentPlayer } = useAppSelector((state) => state.waitingArea);
+
+  const onClick = () => {
+    const createGameDto: CreateGameDto = {
+      owner: currentPlayer,
+      playlistId: playlist.id,
+      mode: GameMode.FindTheArtist,
+    };
+    dispatch(createGame(createGameDto));
   };
 
-  const fetchTracks = async () => {
-    const tracks = await deezerApi.getPlaylistTracks(playlist.id);
+  useEffect(() => {
+    if (status === WaitingAreaStatus.Finished) router.push(RouteUrls.WaitingArea);
+  }, [router, status]);
 
-    const audio = new Audio(tracks[0].preview);
-    audio.play();
-  };
+  useEffect(() => {
+    return () => {
+      dispatch(clearState());
+    };
+  }, [dispatch]);
 
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea onClick={playSong}>
+      <CardActionArea onClick={onClick}>
         <CardMedia component="img" height="200" image={playlist.picture} alt="green iguana" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
