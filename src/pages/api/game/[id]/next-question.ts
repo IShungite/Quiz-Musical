@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
 import Game from "../../../../models/Game";
+import deezerApi from "../../../../utility/deezerApi";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { query } = req;
@@ -17,22 +18,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     return res.status(404).json({ message: "Game not found" });
   }
 
-  const gameUpdated = await Game.findByIdAndUpdate(
-    query.id,
-    {
-      currentAnswerSuggestions: ["artiste 1", "artiste 2", "artiste 3", "artiste 4"],
-      currentQuestionNb: game.currentQuestionNb + 1,
-    },
-    { new: true }
-  ).exec();
+  const tracks = await deezerApi.getPlaylistTracks(game.playlistId);
 
-  if (!gameUpdated) {
-    return res.status(404).json({ message: "Game not updated" });
-  }
+  const nextTrack = tracks[Math.floor(Math.random() * tracks.length)];
 
-  console.log({ gameUpdated });
+  // const gameUpdated = await Game.findByIdAndUpdate(
+  //   query.id,
+  //   {
+  //     trackId: nextTrack.id,
+  //     currentAnswerSuggestions: ["artiste 1", "artiste 2", "artiste 3", "artiste 4"],
+  //     currentQuestionNb: game.currentQuestionNb + 1,
+  //   },
+  //   { new: true }
+  // ).exec();
 
-  res.status(200).json({ data: gameUpdated });
+  // if (!gameUpdated) {
+  //   return res.status(404).json({ message: "Game not updated" });
+  // }
+
+  // console.log({ gameUpdated });
+
+  // res.status(200).json({ data: gameUpdated });
+
+  res.status(200).send("test");
 };
 
 export default connectDB(handler);
