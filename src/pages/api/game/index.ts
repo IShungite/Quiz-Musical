@@ -8,37 +8,25 @@ export type GameResponseType = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
-  const { method, body, query } = req;
+  const { method, body } = req;
 
-  const { owner, mode, playlistId }: CreateGameDto = JSON.parse(body);
-
-  switch (method) {
-    case "POST":
-      const game = await Game.create({
-        mode,
-        playlistId,
-        players: [owner],
-        status: GameStatus.Draft,
-        owner,
-        currentQuestionNb: 0,
-        currentAnswerSuggestions: [],
-      });
-
-      res.status(200).json({ data: game });
-      return;
-    case "GET":
-      if (typeof query.id === "string") {
-        const game = await Game.findById(query.id).exec();
-        if (game) {
-          res.status(200).json({ data: game });
-        } else {
-          res.status(404).json({ message: "Game not found" });
-        }
-      }
-      return;
-    default:
-      res.status(405).end();
+  if (method !== "POST") {
+    return res.status(400).json({ message: "Method allowed: POST" });
   }
+
+  const { ownerId, mode, playlistId }: CreateGameDto = JSON.parse(body);
+
+  const game = await Game.create({
+    mode,
+    playlistId,
+    playersId: [ownerId],
+    status: GameStatus.Draft,
+    ownerId,
+    currentQuestionNb: 0,
+    currentAnswerSuggestions: [],
+  });
+
+  res.status(200).json({ data: game });
 };
 
 export default connectDB(handler);

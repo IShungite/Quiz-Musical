@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+import { IPlayer } from "./Player";
 
 export interface IGameBase {
   mode: GameMode;
   playlistId: number;
-  players: Player[];
+  playersId: string[];
   status: GameStatus;
-  owner: Player;
+  ownerId: string;
   currentTrackPreview: string;
   currentQuestionNb: number;
   currentAnswerSuggestions: string[];
@@ -18,12 +19,7 @@ export interface IGame extends IGameBase {
 export interface CreateGameDto {
   playlistId: number;
   mode: GameMode;
-  owner: Player;
-}
-
-export interface Player {
-  id: number;
-  name: string;
+  ownerId: string;
 }
 
 export enum GameMode {
@@ -46,7 +42,7 @@ const GameSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  players: {
+  playersId: {
     type: Array,
     default: [],
   },
@@ -54,8 +50,8 @@ const GameSchema = new mongoose.Schema({
     type: String,
     default: "draft",
   },
-  owner: {
-    type: Object,
+  ownerId: {
+    type: String,
     required: true,
   },
   currentTrackPreview: {

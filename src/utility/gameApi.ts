@@ -1,4 +1,5 @@
 import { CreateGameDto, IGame } from "../models/Game";
+import { CreatePlayerDto, IPlayer } from "../models/Player";
 
 const createGame = async (createGameDto: CreateGameDto): Promise<IGame> => {
   try {
@@ -7,6 +8,16 @@ const createGame = async (createGameDto: CreateGameDto): Promise<IGame> => {
     const game: IGame = (await response.json()).data;
 
     return game;
+  } catch (error) {
+    const err = error as Error;
+    console.log(err);
+    throw new Error(err.message);
+  }
+};
+const startGame = async (gameId: string): Promise<void> => {
+  try {
+    await fetch(`/api/game/${gameId}/start`);
+    return;
   } catch (error) {
     const err = error as Error;
     console.log(err);
@@ -28,9 +39,45 @@ const nextQuestion = async (gameId: string): Promise<IGame> => {
   }
 };
 
+const sendAnswer = async (gameId: string, answer: string): Promise<void> => {
+  try {
+    await fetch(`/api/game/${gameId}/answer`, { body: answer, method: "POST" });
+  } catch (error) {
+    const err = error as Error;
+    console.log(err);
+    throw new Error(err.message);
+  }
+};
+const createPlayer = async (createPlayerDto: CreatePlayerDto): Promise<IPlayer> => {
+  try {
+    const response = await fetch(`/api/player`, { body: JSON.stringify(createPlayerDto), method: "POST" });
+
+    const player: IPlayer = (await response.json()).data;
+    return player;
+  } catch (error) {
+    const err = error as Error;
+    console.log(err);
+    throw new Error(err.message);
+  }
+};
+
+const joinGame = async (gameId: string, playerId: string): Promise<void> => {
+  try {
+    await fetch(`/api/game/${gameId}/join`, { body: playerId, method: "POST" });
+  } catch (error) {
+    const err = error as Error;
+    console.log(err);
+    throw new Error(err.message);
+  }
+};
+
 const gameApi = {
   createGame,
   nextQuestion,
+  startGame,
+  sendAnswer,
+  joinGame,
+  createPlayer,
 };
 
 export default gameApi;
