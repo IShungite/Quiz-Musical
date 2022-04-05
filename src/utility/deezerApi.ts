@@ -1,3 +1,4 @@
+import { Artist } from "../models/Artist";
 import { Playlist } from "../models/Playlist";
 import { Track } from "../models/Tracks";
 
@@ -28,9 +29,24 @@ const getPlaylistTracks = async (playlistId: number): Promise<Track[]> => {
   }
 };
 
+const getSimilarArtists = async (artistId: number): Promise<Artist[]> => {
+  try {
+    const response = await fetch(`${baseUrl}artist/${artistId}/related`, { method: "GET", headers: headers });
+
+    const artists: Artist[] = (await response.json()).data;
+
+    return artists;
+  } catch (error) {
+    const err = error as Error;
+    console.log(err);
+    throw new Error(err.message);
+  }
+};
+
 const deezerApi = {
   searchPlaylists,
   getPlaylistTracks,
+  getSimilarArtists,
 };
 
 export default deezerApi;

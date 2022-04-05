@@ -8,7 +8,7 @@ export class Engine {
 
   answerSuggestions: string[] = [];
   questionNumber = 0;
-  trackId = "";
+  currentTrackPreview = "";
 
   constructor(game: Game) {
     this.game = game;

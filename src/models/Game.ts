@@ -6,7 +6,7 @@ export interface IGameBase {
   players: Player[];
   status: GameStatus;
   owner: Player;
-  currentTrackId: string;
+  currentTrackPreview: string;
   currentQuestionNb: number;
   currentAnswerSuggestions: string[];
 }
@@ -58,7 +58,7 @@ const GameSchema = new mongoose.Schema({
     type: Object,
     required: true,
   },
-  currentTrackId: {
+  currentTrackPreview: {
     type: String,
     default: "",
   },

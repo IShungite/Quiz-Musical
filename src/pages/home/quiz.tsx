@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Timer from "../../components/Timer/timer";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { nextQuestion } from "../../reducers/waitingAreaSlice";
@@ -12,8 +12,10 @@ export default function Quiz() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const [audioIsPlaying, setAudioIsPlaying] = useState(false);
+
   const date = new Date();
-  date.setSeconds(date.getSeconds() + 5);
+  date.setSeconds(date.getSeconds() + 20);
 
   const onTimerExpires = useCallback(() => {
     if (!game) {
@@ -25,6 +27,14 @@ export default function Quiz() {
 
     dispatch(nextQuestion(game._id));
   }, []);
+
+  useEffect(() => {
+    if (game?.currentTrackPreview && !audioIsPlaying) {
+      const audio = new Audio(game.currentTrackPreview);
+      audio.play();
+      setAudioIsPlaying(true);
+    }
+  }, [game?.currentTrackPreview]);
 
   console.log("Quiz");
 

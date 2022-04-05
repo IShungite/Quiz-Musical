@@ -1,3 +1,5 @@
+import { Artist } from "./Artist";
+
 export type Track = {
   checksum: string;
   album: Album;
@@ -27,19 +29,6 @@ type Album = {
   cover_big: string;
   cover_xl: string;
   md5_image: string;
-  tracklist: string;
-  type: string;
-};
-
-type Artist = {
-  id: number;
-  link: string;
-  name: string;
-  picture: string;
-  picture_small: string;
-  picture_medium: string;
-  picture_big: string;
-  picture_xl: string;
   tracklist: string;
   type: string;
 };

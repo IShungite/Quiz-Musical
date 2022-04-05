@@ -3,6 +3,7 @@ import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
 import Game from "../../../../models/Game";
 import deezerApi from "../../../../utility/deezerApi";
+import { shuffle } from "../../../../utility/utility";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { query } = req;
@@ -22,25 +23,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   const nextTrack = tracks[Math.floor(Math.random() * tracks.length)];
 
-  // const gameUpdated = await Game.findByIdAndUpdate(
-  //   query.id,
-  //   {
-  //     trackId: nextTrack.id,
-  //     currentAnswerSuggestions: ["artiste 1", "artiste 2", "artiste 3", "artiste 4"],
-  //     currentQuestionNb: game.currentQuestionNb + 1,
-  //   },
-  //   { new: true }
-  // ).exec();
+  const similarArtists = await deezerApi.getSimilarArtists(nextTrack.artist.id);
 
-  // if (!gameUpdated) {
-  //   return res.status(404).json({ message: "Game not updated" });
-  // }
+  const shuffledArtists = shuffle(similarArtists);
 
-  // console.log({ gameUpdated });
+  const suggestedArtists = shuffledArtists.slice(0, 3);
 
-  // res.status(200).json({ data: gameUpdated });
+  const currentAnswerSuggestions = suggestedArtists.map((artist) => artist.name);
+  currentAnswerSuggestions.push(nextTrack.artist.name);
 
-  res.status(200).send("test");
+  const gameUpdated = await Game.findByIdAndUpdate(
+    query.id,
+    {
+      currentTrackPreview: nextTrack.preview,
+      currentAnswerSuggestions: shuffle(currentAnswerSuggestions),
+      currentQuestionNb: game.currentQuestionNb + 1,
+    },
+    { new: true }
+  ).exec();
+
+  if (!gameUpdated) {
+    return res.status(404).json({ message: "Game not updated" });
+  }
+
+  res.status(200).json({ data: gameUpdated });
 };
 
 export default connectDB(handler);
