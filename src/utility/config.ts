@@ -5,4 +5,5 @@ export enum RouteUrls {
   Login = "/auth/login",
   Logout = "/auth/logout",
   WaitingArea = "/home/waiting-area",
+  Quiz = "/home/quiz",
 }

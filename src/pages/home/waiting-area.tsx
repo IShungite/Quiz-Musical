@@ -1,18 +1,25 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
-import { useAppSelector } from "../../hooks/reducer";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import { nextQuestion } from "../../reducers/waitingAreaSlice";
 import { RouteUrls } from "../../utility/config";
 
 export default function WaitingArea() {
   const { game } = useAppSelector((state) => state.waitingArea);
 
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   if (!game) {
     router.push(RouteUrls.NewQuiz);
     return null;
   }
+
+  const onClickPlay = () => {
+    dispatch(nextQuestion(game._id));
+    router.push(RouteUrls.Quiz);
+  };
 
   return (
     <>
@@ -31,7 +38,9 @@ export default function WaitingArea() {
       </Grid>
 
       <Box textAlign="center">
-        <Button variant="outlined">Jouer</Button>
+        <Button variant="outlined" onClick={onClickPlay}>
+          Jouer
+        </Button>
       </Box>
     </>
   );

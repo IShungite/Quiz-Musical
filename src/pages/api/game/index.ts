@@ -1,34 +1,34 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { CreateGameDto, Game, GameStatus } from "../../../models/Game";
-
-export const games: Game[] = [];
+import connectDB from "../../../middleware/mongodb";
+import Game, { CreateGameDto, GameStatus, IGame } from "../../../models/Game";
 
 export type GameResponseType = {
-  data?: Game;
+  data?: IGame;
   message?: string;
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<GameResponseType>) {
+const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { method, body, query } = req;
 
   const { owner, mode, playlistId }: CreateGameDto = JSON.parse(body);
 
   switch (method) {
     case "POST":
-      const game: Game = {
-        id: Date.now().toString(),
+      const game = await Game.create({
         mode,
         playlistId,
         players: [owner],
         status: GameStatus.Draft,
         owner,
-      };
-      games.push(game);
+        currentQuestionNb: 0,
+        currentAnswerSuggestions: [],
+      });
+
       res.status(200).json({ data: game });
       return;
     case "GET":
       if (typeof query.id === "string") {
-        const game = games.find((g) => g.id === query.id);
+        const game = await Game.findById(query.id).exec();
         if (game) {
           res.status(200).json({ data: game });
         } else {
@@ -39,4 +39,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<GameRe
     default:
       res.status(405).end();
   }
-}
+};
+
+export default connectDB(handler);
