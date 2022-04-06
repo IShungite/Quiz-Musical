@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
 import Game, { GameStatus } from "../../../../models/Game";
+import Player from "../../../../models/Player";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { query } = req;
@@ -26,6 +27,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   if (!gameUpdated) {
     return res.status(404).json({ message: "Game not started" });
   }
+
+  const resetPlayerPromises = gameUpdated.playersId.map((playerId) =>
+    Player.findByIdAndUpdate(playerId, { hasAnswered: false, score: 0 }, { new: true }).exec()
+  );
+
+  await Promise.all(resetPlayerPromises);
 
   await fetch(`http://localhost:3000/api/game/${query.id}/next-question`);
 

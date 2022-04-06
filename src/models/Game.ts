@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { IPlayer } from "./Player";
 
 export interface IGameBase {
   mode: GameMode;

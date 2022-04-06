@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
 import Game from "../../../../models/Game";
+import GameAnswer from "../../../../models/GameAnswer";
+import Player from "../../../../models/Player";
 import deezerApi from "../../../../utility/deezerApi";
 import { shuffle } from "../../../../utility/utility";
 
@@ -45,6 +47,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   if (!gameUpdated) {
     return res.status(404).json({ message: "Game not updated" });
   }
+
+  await GameAnswer.findOneAndUpdate({ gameId: query.id }, { gameId: query.id, answer: nextTrack.artist.name }, { upsert: true, new: true }).exec();
+
+  const resetPlayerPromises = gameUpdated.playersId.map((playerId) =>
+    Player.findByIdAndUpdate(playerId, { hasAnswered: false }, { new: true }).exec()
+  );
+
+  await Promise.all(resetPlayerPromises);
 
   res.status(200).json({ data: gameUpdated });
 };

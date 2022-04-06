@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { CreateAnswerDto } from "../models/Answer";
 import { CreateGameDto, IGame } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
 import gameApi from "../utility/gameApi";
@@ -65,11 +66,11 @@ export const nextQuestion = createAsyncThunk<IGame, string, { rejectValue: strin
     return thunkAPI.rejectWithValue(error.message);
   }
 });
-export const sendAnswer = createAsyncThunk<void, { gameId: string; answer: string }, { rejectValue: string }>(
+export const sendAnswer = createAsyncThunk<void, { gameId: string; createAnswerDto: CreateAnswerDto }, { rejectValue: string }>(
   "waitingArea/nextQuestion",
-  async ({ gameId, answer }, thunkAPI) => {
+  async ({ gameId, createAnswerDto }, thunkAPI) => {
     try {
-      await gameApi.sendAnswer(gameId, answer);
+      await gameApi.sendAnswer(gameId, createAnswerDto);
     } catch (err) {
       const error = err as Error;
       return thunkAPI.rejectWithValue(error.message);

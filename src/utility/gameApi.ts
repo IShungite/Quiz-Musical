@@ -1,3 +1,4 @@
+import { CreateAnswerDto } from "../models/Answer";
 import { CreateGameDto, IGame } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
 
@@ -39,9 +40,9 @@ const nextQuestion = async (gameId: string): Promise<IGame> => {
   }
 };
 
-const sendAnswer = async (gameId: string, answer: string): Promise<void> => {
+const sendAnswer = async (gameId: string, createAnswerDto: CreateAnswerDto): Promise<void> => {
   try {
-    await fetch(`/api/game/${gameId}/answer`, { body: answer, method: "POST" });
+    await fetch(`/api/game/${gameId}/answer`, { body: JSON.stringify(createAnswerDto), method: "POST" });
   } catch (error) {
     const err = error as Error;
     console.log(err);
