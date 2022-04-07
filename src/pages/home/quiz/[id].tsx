@@ -1,9 +1,9 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
-import useQuiz from "../../../hooks/useAudio";
+import useAudio from "../../../hooks/useAudio";
 import { CreateAnswerDto } from "../../../models/Answer";
 import { IGame } from "../../../models/Game";
 import { nextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
@@ -12,7 +12,7 @@ import { RouteUrls } from "../../../utility/config";
 export default function Quiz({ game }: { game: IGame }) {
   const dispatch = useAppDispatch();
 
-  const { stopAudio } = useQuiz(game.currentTrackPreview);
+  const { stopAudio } = useAudio(game.currentTrackPreview);
 
   const { currentPlayer, sendAnswerStatus } = useAppSelector((state) => state.waitingArea);
 
