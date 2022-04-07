@@ -1,32 +1,59 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
-import Timer from "../../../components/Timer/timer";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
+import { CreateAnswerDto } from "../../../models/Answer";
 import { IGame } from "../../../models/Game";
-import { nextQuestion, sendAnswer } from "../../../reducers/waitingAreaSlice";
+import { nextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
 import { RouteUrls } from "../../../utility/config";
 
 export default function Quiz({ game }: { game: IGame }) {
   const dispatch = useAppDispatch();
 
   const [audioIsPlaying, setAudioIsPlaying] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement>(null);
+
+  const { currentPlayer, sendAnswerStatus } = useAppSelector((state) => state.waitingArea);
+
+  const router = useRouter();
 
   const date = new Date();
   date.setSeconds(date.getSeconds() + 20);
 
   useEffect(() => {
     if (game.currentTrackPreview && !audioIsPlaying) {
-      const audio = new Audio(game.currentTrackPreview);
-      audio.play();
+      const newAudio = new Audio(game.currentTrackPreview);
+      newAudio.play();
+      setAudio(newAudio);
       setAudioIsPlaying(true);
     }
   }, [game.currentTrackPreview]);
 
   const onClick = (answer: string) => {
-    dispatch(sendAnswer({ gameId: game._id, answer }));
+    if (!currentPlayer) return;
+
+    const createAnswerDto: CreateAnswerDto = { answer, playerId: currentPlayer._id };
+    dispatch(sendAnswer({ gameId: game._id, createAnswerDto }));
   };
+
+  useEffect(() => {
+    if (sendAnswerStatus === WaitingAreaStatus.Finished) {
+      dispatch(nextQuestion(game._id));
+      router.replace(router.asPath);
+      audio.pause();
+      setAudioIsPlaying(false);
+    }
+  }, [dispatch, game._id, sendAnswerStatus]);
+
+  useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+        setAudioIsPlaying(false);
+      }
+    };
+  }, [audio]);
 
   return (
     <>

@@ -43,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
     return res.status(400).json({ message: "You already send the answer" });
   }
 
-  const gameAnswer = await GameAnswer.findById(query.id).exec();
+  const gameAnswer = await GameAnswer.findOne({ gameId: query.id }).exec();
 
   if (!gameAnswer) {
     return res.status(404).json({ message: "Game answer not found" });

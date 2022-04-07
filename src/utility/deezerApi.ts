@@ -2,7 +2,8 @@ import { Artist } from "../models/Artist";
 import { Playlist } from "../models/Playlist";
 import { Track } from "../models/Tracks";
 
-const baseUrl = "https://cors-anywhere.herokuapp.com/http://api.deezer.com/";
+// const baseUrl = "https://cors-anywhere.herokuapp.com/http://api.deezer.com/";
+const baseUrl = "http://api.deezer.com/";
 
 const headers = new Headers();
 headers.append("Origin", "http://localhost:3000");

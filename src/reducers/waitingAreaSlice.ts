@@ -17,6 +17,7 @@ interface WaitingAreaState {
   createPlayerStatus: WaitingAreaStatus;
   joinGameStatus: WaitingAreaStatus;
   startGameStatus: WaitingAreaStatus;
+  sendAnswerStatus: WaitingAreaStatus;
   errorMessage?: string;
   currentPlayer?: IPlayer;
 }
@@ -26,6 +27,7 @@ const initialWaitingArea: WaitingAreaState = {
   createPlayerStatus: WaitingAreaStatus.None,
   joinGameStatus: WaitingAreaStatus.None,
   startGameStatus: WaitingAreaStatus.None,
+  sendAnswerStatus: WaitingAreaStatus.None,
   // currentPlayer: {
   //   _id: "dza1dz5adza",
   //   name: "Shun",
@@ -67,7 +69,7 @@ export const nextQuestion = createAsyncThunk<IGame, string, { rejectValue: strin
   }
 });
 export const sendAnswer = createAsyncThunk<void, { gameId: string; createAnswerDto: CreateAnswerDto }, { rejectValue: string }>(
-  "waitingArea/nextQuestion",
+  "waitingArea/sendAnswer",
   async ({ gameId, createAnswerDto }, thunkAPI) => {
     try {
       await gameApi.sendAnswer(gameId, createAnswerDto);
@@ -176,6 +178,18 @@ const waitingAreaSlice = createSlice({
       })
       .addCase(nextQuestion.rejected, (state, { payload }) => {
         state.status = WaitingAreaStatus.Error;
+
+        state.errorMessage = payload;
+      })
+
+      .addCase(sendAnswer.pending, (state) => {
+        state.sendAnswerStatus = WaitingAreaStatus.Loading;
+      })
+      .addCase(sendAnswer.fulfilled, (state) => {
+        state.sendAnswerStatus = WaitingAreaStatus.Finished;
+      })
+      .addCase(sendAnswer.rejected, (state, { payload }) => {
+        state.sendAnswerStatus = WaitingAreaStatus.Error;
 
         state.errorMessage = payload;
       });
