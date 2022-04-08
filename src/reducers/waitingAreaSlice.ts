@@ -129,6 +129,9 @@ const waitingAreaSlice = createSlice({
     resetCreatePlayerStatus: (state) => {
       state.createPlayerStatus = WaitingAreaStatus.None;
     },
+    resetNextQuestion: (state) => {
+      state.nextQuestionStatus = WaitingAreaStatus.None;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -211,5 +214,6 @@ const waitingAreaSlice = createSlice({
   },
 });
 
-export const { clearState, resetCreateGameStatus, resetStartGameStatus, resetJoinGameStatus, resetCreatePlayerStatus } = waitingAreaSlice.actions;
+export const { clearState, resetCreateGameStatus, resetStartGameStatus, resetJoinGameStatus, resetCreatePlayerStatus, resetNextQuestion } =
+  waitingAreaSlice.actions;
 export default waitingAreaSlice.reducer;

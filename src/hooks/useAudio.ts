@@ -14,12 +14,6 @@ export default function useAudio(audioUrl: string) {
     if (audioUrl && (!audio || audio.src !== audioUrl)) {
       const newAudio = new Audio(audioUrl);
       newAudio.autoplay = true;
-      console.log("new audio", audioUrl);
-      setTimeout(() => {
-        console.log("play");
-        console.log(newAudio);
-        newAudio.play();
-      }, 2000);
       setAudio(newAudio);
     }
   }, [audio, audioUrl]);

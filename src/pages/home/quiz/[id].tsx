@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
 import useAudio from "../../../hooks/useAudio";
 import { CreateAnswerDto } from "../../../models/Answer";
 import { IGame } from "../../../models/Game";
-import { clearState, nextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
+import { clearState, nextQuestion, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
 import { RouteUrls } from "../../../utility/config";
 
 export default function Quiz({ game }: { game: IGame }) {
@@ -32,16 +32,21 @@ export default function Quiz({ game }: { game: IGame }) {
 
   useEffect(() => {
     if (nextQuestionStatus === WaitingAreaStatus.Finished) {
-      router.replace(router.asPath);
+      dispatch(resetNextQuestion());
       stopAudio();
+      router.replace(router.asPath);
     }
-  }, [nextQuestionStatus, router, stopAudio]);
+  }, [dispatch, nextQuestionStatus, router, stopAudio]);
 
   useEffect(() => {
     return () => {
       dispatch(clearState());
     };
   }, [dispatch]);
+
+  if (!currentPlayer) {
+    return router.push(RouteUrls.NewQuiz);
+  }
 
   return (
     <>
