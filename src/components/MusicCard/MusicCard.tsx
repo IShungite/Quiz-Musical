@@ -4,7 +4,7 @@ import { Playlist } from "../../models/Playlist";
 import { useRouter } from "next/router";
 import { RouteUrls } from "../../utility/config";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { clearState, createGame, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { createGame, resetCreateGameStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
 import { CreateGameDto, GameMode } from "../../models/Game";
 import CreatePlayerDialog from "../CreatePlayerDialog/CreatePlayerDialog";
 
@@ -16,7 +16,7 @@ export default function MusicCard({ playlist }: Props) {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { status, currentPlayer } = useAppSelector((state) => state.waitingArea);
+  const { createGameStatus, currentPlayer } = useAppSelector((state) => state.waitingArea);
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -34,12 +34,13 @@ export default function MusicCard({ playlist }: Props) {
   };
 
   useEffect(() => {
-    if (status === WaitingAreaStatus.Finished) router.push(RouteUrls.WaitingArea);
-  }, [router, status]);
+    if (createGameStatus === WaitingAreaStatus.Finished) router.push(RouteUrls.WaitingArea);
+  }, [router, createGameStatus]);
 
+  // Reset createGameStatus when component is unmounted
   useEffect(() => {
     return () => {
-      dispatch(clearState());
+      dispatch(resetCreateGameStatus());
     };
   }, [dispatch]);
 

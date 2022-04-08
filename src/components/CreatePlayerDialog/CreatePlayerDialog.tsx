@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { clearState, createPlayer, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { resetCreatePlayerStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
 import CreatePlayerForm from "../CreatePlayerForm/CreatePlayerForm";
 
 export default function CreatePlayerDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
@@ -9,27 +9,24 @@ export default function CreatePlayerDialog({ open, setOpen }: { open: boolean; s
 
   const { createPlayerStatus, currentPlayer } = useAppSelector((state) => state.waitingArea);
 
-  const onClickCreate = (name: string) => {
-    dispatch(createPlayer({ name }));
-  };
-
   useEffect(() => {
     if (createPlayerStatus === WaitingAreaStatus.Finished && currentPlayer) {
       setOpen(false);
     }
-  }, [createPlayerStatus]);
+  }, [createPlayerStatus, currentPlayer]);
 
+  // Reset createPlayerStatus when component is unmounted
   useEffect(() => {
     return () => {
-      dispatch(clearState());
+      dispatch(resetCreatePlayerStatus());
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <Dialog open={open}>
       <DialogTitle>New player</DialogTitle>
       <DialogContent>
-        <CreatePlayerForm onClickCreate={onClickCreate} />
+        <CreatePlayerForm />
       </DialogContent>
     </Dialog>
   );

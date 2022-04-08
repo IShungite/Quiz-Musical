@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { IGame } from "../models/Game";
 
 export default function useAudio(audioUrl: string) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -14,7 +13,13 @@ export default function useAudio(audioUrl: string) {
   useEffect(() => {
     if (audioUrl && (!audio || audio.src !== audioUrl)) {
       const newAudio = new Audio(audioUrl);
-      newAudio.play();
+      newAudio.autoplay = true;
+      console.log("new audio", audioUrl);
+      setTimeout(() => {
+        console.log("play");
+        console.log(newAudio);
+        newAudio.play();
+      }, 2000);
       setAudio(newAudio);
     }
   }, [audio, audioUrl]);

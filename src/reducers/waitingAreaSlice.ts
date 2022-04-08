@@ -13,20 +13,22 @@ export enum WaitingAreaStatus {
 
 interface WaitingAreaState {
   game?: IGame;
-  status: WaitingAreaStatus;
+  createGameStatus: WaitingAreaStatus;
   createPlayerStatus: WaitingAreaStatus;
   joinGameStatus: WaitingAreaStatus;
   startGameStatus: WaitingAreaStatus;
   sendAnswerStatus: WaitingAreaStatus;
+  nextQuestionStatus: WaitingAreaStatus;
   errorMessage?: string;
   currentPlayer?: IPlayer;
 }
 
 const initialWaitingArea: WaitingAreaState = {
-  status: WaitingAreaStatus.None,
+  createGameStatus: WaitingAreaStatus.None,
   createPlayerStatus: WaitingAreaStatus.None,
   joinGameStatus: WaitingAreaStatus.None,
   startGameStatus: WaitingAreaStatus.None,
+  nextQuestionStatus: WaitingAreaStatus.None,
   sendAnswerStatus: WaitingAreaStatus.None,
   // currentPlayer: {
   //   _id: "dza1dz5adza",
@@ -109,24 +111,37 @@ const waitingAreaSlice = createSlice({
   initialState: initialWaitingArea,
   reducers: {
     clearState: (state) => {
-      state.status = WaitingAreaStatus.None;
+      state.createGameStatus = WaitingAreaStatus.None;
       state.startGameStatus = WaitingAreaStatus.None;
       state.joinGameStatus = WaitingAreaStatus.None;
+      state.createPlayerStatus = WaitingAreaStatus.None;
+      state.nextQuestionStatus = WaitingAreaStatus.None;
+    },
+    resetCreateGameStatus: (state) => {
+      state.createGameStatus = WaitingAreaStatus.None;
+    },
+    resetStartGameStatus: (state) => {
+      state.startGameStatus = WaitingAreaStatus.None;
+    },
+    resetJoinGameStatus: (state) => {
+      state.joinGameStatus = WaitingAreaStatus.None;
+    },
+    resetCreatePlayerStatus: (state) => {
       state.createPlayerStatus = WaitingAreaStatus.None;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(createGame.pending, (state) => {
-        state.status = WaitingAreaStatus.Loading;
+        state.createGameStatus = WaitingAreaStatus.Loading;
       })
       .addCase(createGame.fulfilled, (state, { payload }) => {
-        state.status = WaitingAreaStatus.Finished;
+        state.createGameStatus = WaitingAreaStatus.Finished;
         state.game = { ...payload };
         console.log("game fulfilled", payload);
       })
       .addCase(createGame.rejected, (state, { payload }) => {
-        state.status = WaitingAreaStatus.Error;
+        state.createGameStatus = WaitingAreaStatus.Error;
 
         state.errorMessage = payload;
       })
@@ -169,15 +184,15 @@ const waitingAreaSlice = createSlice({
       })
 
       .addCase(nextQuestion.pending, (state) => {
-        state.status = WaitingAreaStatus.Loading;
+        state.nextQuestionStatus = WaitingAreaStatus.Loading;
       })
       .addCase(nextQuestion.fulfilled, (state, { payload }) => {
-        state.status = WaitingAreaStatus.Finished;
+        state.nextQuestionStatus = WaitingAreaStatus.Finished;
         state.game = { ...payload };
         console.log("next question game", payload);
       })
       .addCase(nextQuestion.rejected, (state, { payload }) => {
-        state.status = WaitingAreaStatus.Error;
+        state.nextQuestionStatus = WaitingAreaStatus.Error;
 
         state.errorMessage = payload;
       })
@@ -196,5 +211,5 @@ const waitingAreaSlice = createSlice({
   },
 });
 
-export const { clearState } = waitingAreaSlice.actions;
+export const { clearState, resetCreateGameStatus, resetStartGameStatus, resetJoinGameStatus, resetCreatePlayerStatus } = waitingAreaSlice.actions;
 export default waitingAreaSlice.reducer;

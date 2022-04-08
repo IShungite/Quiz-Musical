@@ -14,13 +14,14 @@ export default function Login({ providers }: Props) {
     <Box>
       <Box>login</Box>
 
-      {Object.values(providers).map((provider) => (
-        <Box key={provider.id}>
-          <Button onClick={() => signIn(provider.id, { callbackUrl: "/" })}>
-            <Typography>Login with {provider.name}</Typography>
-          </Button>
-        </Box>
-      ))}
+      {providers &&
+        Object.values(providers).map((provider) => (
+          <Box key={provider.id}>
+            <Button onClick={() => signIn(provider.id, { callbackUrl: "/" })}>
+              <Typography>Login with {provider.name}</Typography>
+            </Button>
+          </Box>
+        ))}
     </Box>
   );
 }

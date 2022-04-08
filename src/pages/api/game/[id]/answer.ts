@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
 import { CreateAnswerDto } from "../../../../models/Answer";
 import Game, { GameStatus } from "../../../../models/Game";

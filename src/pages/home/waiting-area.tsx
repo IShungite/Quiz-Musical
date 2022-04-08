@@ -2,7 +2,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { clearState, nextQuestion, startGame, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { resetStartGameStatus, startGame, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
 import { RouteUrls } from "../../utility/config";
 
 export default function WaitingArea() {
@@ -13,11 +13,10 @@ export default function WaitingArea() {
 
   useEffect(() => {
     if (startGameStatus === WaitingAreaStatus.Finished && game) {
-      console.log("redirecting to game");
+      dispatch(resetStartGameStatus());
       router.push(`${RouteUrls.Quiz}/${game._id}`);
-      dispatch(clearState());
     }
-  }, [router, startGameStatus]);
+  }, [dispatch, game, router, startGameStatus]);
 
   if (!game) {
     router.push(RouteUrls.NewQuiz);
