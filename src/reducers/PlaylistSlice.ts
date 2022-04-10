@@ -11,7 +11,6 @@ export enum PlaylistStatus {
 
 interface PlaylistState {
   playlists: Playlist[];
-  currentPlaylist?: Playlist;
   status: PlaylistStatus;
   errorMessage?: string;
 }
@@ -39,9 +38,6 @@ const playlistSlice = createSlice({
       state.status = PlaylistStatus.None;
       state.playlists = [];
     },
-    setCurrentPlaylist: (state, { payload }: PayloadAction<Playlist>) => {
-      state.currentPlaylist = payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -60,5 +56,5 @@ const playlistSlice = createSlice({
   },
 });
 
-export const { clearState, setCurrentPlaylist } = playlistSlice.actions;
+export const { clearState } = playlistSlice.actions;
 export default playlistSlice.reducer;
