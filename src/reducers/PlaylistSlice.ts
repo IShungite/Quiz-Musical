@@ -10,12 +10,14 @@ export enum PlaylistStatus {
 }
 
 interface PlaylistState {
+  searchTerm: string;
   playlists: Playlist[];
   status: PlaylistStatus;
   errorMessage?: string;
 }
 
 const initialPlaylist: PlaylistState = {
+  searchTerm: "",
   playlists: [],
   status: PlaylistStatus.None,
 };
@@ -38,6 +40,12 @@ const playlistSlice = createSlice({
       state.status = PlaylistStatus.None;
       state.playlists = [];
     },
+    clearPlaylists: (state) => {
+      state.playlists = [];
+    },
+    setSearchTerm: (state, action: PayloadAction<string>) => {
+      state.searchTerm = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -56,5 +64,5 @@ const playlistSlice = createSlice({
   },
 });
 
-export const { clearState } = playlistSlice.actions;
+export const { clearState, clearPlaylists } = playlistSlice.actions;
 export default playlistSlice.reducer;

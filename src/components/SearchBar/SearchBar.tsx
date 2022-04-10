@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { Grid, InputBase } from "@mui/material";
+import { InputBase } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
-import { Playlist } from "../../models/Playlist";
-import MusicCard from "../MusicCard/MusicCard";
-import deezerApi from "../../utility/deezerApi";
+import { useAppDispatch } from "../../hooks/reducer";
+import { clearPlaylists, getPlaylists } from "../../reducers/PlaylistSlice";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -39,46 +38,33 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
   },
 }));
 
 export default function SearchBar() {
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const dispatch = useAppDispatch();
 
   const debounced = useDebouncedCallback(async (value: string) => {
     if (value) {
-      const playlistsFetched = await deezerApi.searchPlaylists(value);
-      setPlaylists(playlistsFetched);
+      dispatch(getPlaylists(value));
     } else {
-      setPlaylists([]);
+      dispatch(clearPlaylists());
     }
-  }, 1000);
+  }, 700);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     debounced(event.target.value);
   };
 
   return (
-    <>
-      <Search sx={{ mb: 2 }}>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase onChange={handleChange} placeholder="Search…" inputProps={{ "aria-label": "search" }} />
-      </Search>
-      <Grid container spacing={2}>
-        {playlists.map((playlist) => (
-          <Grid item key={playlist.id}>
-            <MusicCard playlist={playlist} />
-          </Grid>
-        ))}
-      </Grid>
-    </>
+    <Search sx={{ mb: 2 }}>
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      <StyledInputBase onChange={handleChange} placeholder="Search…" inputProps={{ "aria-label": "search" }} fullWidth />
+    </Search>
   );
 }
