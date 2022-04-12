@@ -93,7 +93,7 @@ export default function AppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {(session ? pagesLeftLogin : pagesLeft).map((page) => (
+              {(session ? pagesLeftLogin : pagesLeftLogin).map((page) => (
                 <MenuItem key={page.name} onClick={() => handleClickNavItem(page.url)}>
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
@@ -105,7 +105,7 @@ export default function AppBar() {
             Game-Sense
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {(session ? pagesLeftLogin : pagesLeft).map((page) => (
+            {(session ? pagesLeftLogin : pagesLeftLogin).map((page) => (
               <Button key={page.name} onClick={() => handleClickNavItem(page.url)} sx={{ my: 2, color: "white", display: "block" }}>
                 {page.name}
               </Button>

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
-import Game from "../../../../models/Game";
+import Game, { GameStatus } from "../../../../models/Game";
 import GameAnswer from "../../../../models/GameAnswer";
 import Player from "../../../../models/Player";
 import deezerApi from "../../../../utility/deezerApi";
@@ -17,6 +17,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   const game = await Game.findById(query.id).exec();
   if (!game) {
     return res.status(404).json({ message: "Game not found" });
+  }
+
+  if (game.maxQuestions === game.currentQuestionNb) {
+    const gameUpdated = await Game.findByIdAndUpdate(
+      query.id,
+      {
+        status: GameStatus.Finished,
+      },
+      { new: true }
+    ).exec();
+
+    if (!gameUpdated) {
+      return res.status(404).json({ message: "Game not updated" });
+    }
+
+    return res.status(200).json({ data: gameUpdated });
   }
 
   const tracks = await deezerApi.getPlaylistTracks(game.playlistId);
