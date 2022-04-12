@@ -141,7 +141,6 @@ const waitingAreaSlice = createSlice({
       .addCase(createGame.fulfilled, (state, { payload }) => {
         state.createGameStatus = WaitingAreaStatus.Finished;
         state.game = { ...payload };
-        console.log("game fulfilled", payload);
       })
       .addCase(createGame.rejected, (state, { payload }) => {
         state.createGameStatus = WaitingAreaStatus.Error;
@@ -192,7 +191,6 @@ const waitingAreaSlice = createSlice({
       .addCase(nextQuestion.fulfilled, (state, { payload }) => {
         state.nextQuestionStatus = WaitingAreaStatus.Finished;
         state.game = { ...payload };
-        console.log("next question game", payload);
       })
       .addCase(nextQuestion.rejected, (state, { payload }) => {
         state.nextQuestionStatus = WaitingAreaStatus.Error;

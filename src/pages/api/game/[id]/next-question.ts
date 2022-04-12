@@ -14,8 +14,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     return res.status(404).json({ message: "Wrong game id" });
   }
 
-  console.log("next question game id: ", query.id);
-
   const game = await Game.findById(query.id).exec();
   if (!game) {
     return res.status(404).json({ message: "Game not found" });

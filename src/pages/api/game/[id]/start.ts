@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   await fetch(`http://localhost:3000/api/game/${query.id}/next-question`);
 
-  res.status(200).end();
+  res.status(200).json({});
 };
 
 export default connectDB(handler);

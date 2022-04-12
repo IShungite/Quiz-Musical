@@ -16,10 +16,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   }
 
   if (game.status !== GameStatus.Draft) {
-    return res.status(400).json({ message: "Too late, game started" });
+    return res.status(400).json({ message: "Can't modify a started game" });
   }
 
-  res.status(200).json({});
+  const { ownerId, ...updatedGameParams } = body;
+
+  if (game.ownerId !== ownerId) {
+    return res.status(400).json({ message: "Only the owner can modify the game" });
+  }
+
+  const gameUpdated = await Game.findByIdAndUpdate(query.id, updatedGameParams, { new: true }).exec();
+
+  if (!gameUpdated) {
+    return res.status(404).json({ message: "Game not updated" });
+  }
+
+  res.status(200).json({ data: gameUpdated });
 };
 
 export default connectDB(handler);
