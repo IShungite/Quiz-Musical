@@ -9,7 +9,7 @@ import useAudio from "../../../hooks/useAudio";
 import { CreateAnswerDto } from "../../../models/Answer";
 import { GameStatus, IGame } from "../../../models/Game";
 import { IPlayer } from "../../../models/Player";
-import { clearState, nextQuestion, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
+import { clearAll, nextQuestion, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
 import { RouteUrls } from "../../../utility/config";
 
 export default function Quiz({ game, players }: { game: IGame; players: IPlayer[] }) {
@@ -43,7 +43,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
 
   useEffect(() => {
     return () => {
-      dispatch(clearState());
+      dispatch(clearAll());
     };
   }, [dispatch]);
 
@@ -61,7 +61,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
         </Typography>
       </Box>
 
-      <Grid container justifyContent="space-evenly">
+      <Grid container justifyContent="space-evenly" spacing={4}>
         <Grid item>
           <Grid container alignItems="center" justifyContent="center" spacing={2}>
             {game.currentAnswerSuggestions.map((answer) => (
