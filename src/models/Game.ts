@@ -56,7 +56,7 @@ const GameSchema = new mongoose.Schema({
   },
   maxQuestions: {
     type: Number,
-    default: 10,
+    default: 15,
   },
   currentTrackPreview: {
     type: String,

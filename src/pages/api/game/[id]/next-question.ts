@@ -43,7 +43,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   const shuffledArtists = shuffle(similarArtists);
 
-  const suggestedArtists = shuffledArtists.slice(0, 3);
+  const nbSuggestions = 6;
+  const suggestedArtists = shuffledArtists.slice(0, nbSuggestions - 1);
 
   const currentAnswerSuggestions = suggestedArtists.map((artist) => artist.name);
   currentAnswerSuggestions.push(nextTrack.artist.name);
