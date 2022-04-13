@@ -7,6 +7,7 @@ export interface IGameBase {
   status: GameStatus;
   ownerId: string;
   maxQuestions: number;
+  playedTracksId: number[];
   currentTrackPreview: string;
   currentQuestionNb: number;
   currentAnswerSuggestions: string[];
@@ -57,6 +58,10 @@ const GameSchema = new mongoose.Schema({
   maxQuestions: {
     type: Number,
     default: 15,
+  },
+  playedTracksId: {
+    type: Array,
+    default: [],
   },
   currentTrackPreview: {
     type: String,

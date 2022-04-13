@@ -1,11 +1,68 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
-import Game, { GameStatus } from "../../../../models/Game";
+import Game, { GameStatus, IGame } from "../../../../models/Game";
 import GameAnswer from "../../../../models/GameAnswer";
 import Player from "../../../../models/Player";
+import { Track } from "../../../../models/Tracks";
 import deezerApi from "../../../../utility/deezerApi";
 import { shuffle } from "../../../../utility/utility";
+
+/**
+ * It gets the tracks of a playlist, shuffles them, and returns the first track that hasn't been played
+ * yet
+ * @param {IGame} game - IGame
+ * @returns The next track to play
+ */
+const getNextTrack = async (game: IGame) => {
+  const tracks = await deezerApi.getPlaylistTracks(game.playlistId);
+
+  const shuffledTacks: Track[] = shuffle(tracks);
+
+  for (const track of shuffledTacks) {
+    if (!game.playedTracksId.includes(track.id)) {
+      return track;
+    }
+  }
+
+  return null;
+};
+
+/**
+ * It takes a track and a number of similar artists to return, and returns a list of similar artists of the track
+ * @param {Track} track - Track
+ * @param {number} nbSimilarArtists - number
+ * @returns An array of artists.
+ */
+const getSimilarArtists = async (track: Track, nbSimilarArtists: number) => {
+  const similarArtists = await deezerApi.getSimilarArtists(track.artist.id);
+
+  const shuffledArtists = shuffle(similarArtists);
+
+  return shuffledArtists.slice(0, nbSimilarArtists - 1);
+};
+
+/**
+ * Update the game status to finished and send the game updated to the client
+ * @param {IGame} game - IGame
+ * @param {NextApiResponse} res - NextApiResponse
+ * @returns the response to the client
+ */
+const finishGame = async (game: IGame, res: NextApiResponse) => {
+  const gameUpdated = await Game.findByIdAndUpdate(
+    game._id,
+    {
+      status: GameStatus.Finished,
+    },
+    { new: true }
+  ).exec();
+
+  if (!gameUpdated) {
+    return res.status(404).json({ message: "Game not updated" });
+  }
+
+  return res.status(200).json({ data: gameUpdated });
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { query } = req;
@@ -20,33 +77,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   }
 
   if (game.maxQuestions === game.currentQuestionNb) {
-    const gameUpdated = await Game.findByIdAndUpdate(
-      query.id,
-      {
-        status: GameStatus.Finished,
-      },
-      { new: true }
-    ).exec();
-
-    if (!gameUpdated) {
-      return res.status(404).json({ message: "Game not updated" });
-    }
-
-    return res.status(200).json({ data: gameUpdated });
+    return finishGame(game, res);
   }
 
-  const tracks = await deezerApi.getPlaylistTracks(game.playlistId);
+  const nextTrack = await getNextTrack(game);
 
-  const nextTrack = tracks[Math.floor(Math.random() * tracks.length)];
+  if (!nextTrack) {
+    return finishGame(game, res);
+  }
 
-  const similarArtists = await deezerApi.getSimilarArtists(nextTrack.artist.id);
+  const nbSimilarArtists = 6;
+  const similarArtists = await getSimilarArtists(nextTrack, nbSimilarArtists);
 
-  const shuffledArtists = shuffle(similarArtists);
-
-  const nbSuggestions = 6;
-  const suggestedArtists = shuffledArtists.slice(0, nbSuggestions - 1);
-
-  const currentAnswerSuggestions = suggestedArtists.map((artist) => artist.name);
+  const currentAnswerSuggestions = similarArtists.map((artist) => artist.name);
   currentAnswerSuggestions.push(nextTrack.artist.name);
 
   const gameUpdated = await Game.findByIdAndUpdate(
@@ -55,6 +98,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
       currentTrackPreview: nextTrack.preview,
       currentAnswerSuggestions: shuffle(currentAnswerSuggestions),
       currentQuestionNb: game.currentQuestionNb + 1,
+      playedTracksId: [...game.playedTracksId, nextTrack.id],
     },
     { new: true }
   ).exec();
@@ -65,11 +109,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   await GameAnswer.findOneAndUpdate({ gameId: query.id }, { gameId: query.id, answer: nextTrack.artist.name }, { upsert: true, new: true }).exec();
 
-  const resetPlayerPromises = gameUpdated.playersId.map((playerId) =>
+  const promisesResetPlayer = gameUpdated.playersId.map((playerId) =>
     Player.findByIdAndUpdate(playerId, { hasAnswered: false }, { new: true }).exec()
   );
 
-  await Promise.all(resetPlayerPromises);
+  await Promise.all(promisesResetPlayer);
 
   res.status(200).json({ data: gameUpdated });
 };
