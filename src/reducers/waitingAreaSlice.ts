@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CreateAnswerDto } from "../models/Answer";
-import { CreateGameDto, IGame } from "../models/Game";
+import { CreateGameDto, IGame, UpdateGameDto } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
 import gameApi from "../utility/gameApi";
 
@@ -30,12 +30,6 @@ const initialWaitingArea: WaitingAreaState = {
   startGameStatus: WaitingAreaStatus.None,
   nextQuestionStatus: WaitingAreaStatus.None,
   sendAnswerStatus: WaitingAreaStatus.None,
-  // currentPlayer: {
-  //   _id: "dza1dz5adza",
-  //   name: "Shun",
-  //   hasAnswered: false,
-  //   score: 0,
-  // },
 };
 
 export const createGame = createAsyncThunk<IGame, CreateGameDto, { rejectValue: string }>(
@@ -51,15 +45,17 @@ export const createGame = createAsyncThunk<IGame, CreateGameDto, { rejectValue: 
   }
 );
 
-export const startGame = createAsyncThunk<void, string, { rejectValue: string }>("waitingArea/startGame", async (gameId, thunkAPI) => {
-  try {
-    await gameApi.startGame(gameId);
-    return;
-  } catch (err) {
-    const error = err as Error;
-    return thunkAPI.rejectWithValue(error.message);
+export const startGame = createAsyncThunk<IGame, { gameId: string; updateGameDto: UpdateGameDto }, { rejectValue: string }>(
+  "waitingArea/startGame",
+  async ({ gameId, updateGameDto }, thunkAPI) => {
+    try {
+      return await gameApi.startGame(gameId, updateGameDto);
+    } catch (err) {
+      const error = err as Error;
+      return thunkAPI.rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const nextQuestion = createAsyncThunk<IGame, string, { rejectValue: string }>("waitingArea/nextQuestion", async (gameId, thunkAPI) => {
   try {
@@ -152,8 +148,10 @@ const waitingAreaSlice = createSlice({
       .addCase(startGame.pending, (state) => {
         state.startGameStatus = WaitingAreaStatus.Loading;
       })
-      .addCase(startGame.fulfilled, (state) => {
+      .addCase(startGame.fulfilled, (state, { payload }) => {
         state.startGameStatus = WaitingAreaStatus.Finished;
+
+        state.game = { ...payload };
       })
       .addCase(startGame.rejected, (state, { payload }) => {
         state.startGameStatus = WaitingAreaStatus.Error;
@@ -214,6 +212,6 @@ const waitingAreaSlice = createSlice({
   },
 });
 
-export const { clearState, clearAll, resetCreateGameStatus, resetStartGameStatus, resetJoinGameStatus, resetCreatePlayerStatus, resetNextQuestion } =
+export const { clearAll, resetCreateGameStatus, resetStartGameStatus, resetJoinGameStatus, resetCreatePlayerStatus, resetNextQuestion } =
   waitingAreaSlice.actions;
 export default waitingAreaSlice.reducer;

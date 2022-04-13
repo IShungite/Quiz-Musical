@@ -3,13 +3,15 @@ import mongoose from "mongoose";
 export interface IGameBase {
   mode: GameMode;
   playlistId: number;
+  totalPlaylistTracks: number;
   playersId: string[];
   status: GameStatus;
   ownerId: string;
-  maxQuestions: number;
+  maxTracks: number;
+  maxSuggestions: number;
   playedTracksId: number[];
   currentTrackPreview: string;
-  currentQuestionNb: number;
+  currentTrackNb: number;
   currentAnswerSuggestions: string[];
 }
 
@@ -21,6 +23,11 @@ export interface CreateGameDto {
   playlistId: number;
   mode: GameMode;
   ownerId: string;
+}
+
+export interface UpdateGameDto {
+  maxTracks: number;
+  maxSuggestions: number;
 }
 
 export enum GameMode {
@@ -43,6 +50,10 @@ const GameSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  totalPlaylistTracks: {
+    type: Number,
+    required: true,
+  },
   playersId: {
     type: Array,
     default: [],
@@ -55,9 +66,13 @@ const GameSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  maxQuestions: {
+  maxTracks: {
     type: Number,
     default: 15,
+  },
+  maxSuggestions: {
+    type: Number,
+    default: 6,
   },
   playedTracksId: {
     type: Array,
@@ -67,7 +82,7 @@ const GameSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  currentQuestionNb: {
+  currentTrackNb: {
     type: Number,
     default: 0,
   },

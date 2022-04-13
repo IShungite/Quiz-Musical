@@ -57,7 +57,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
       <Box textAlign="center" sx={{ mb: 5 }}>
         <Typography variant="h2">Quel est le nom de l&apos;artiste ?</Typography>
         <Typography variant="h4">
-          {game.currentQuestionNb}/{game.maxQuestions}
+          {game.currentTrackNb}/{game.maxTracks}
         </Typography>
       </Box>
 

@@ -16,11 +16,12 @@ import { shuffle } from "../../../../utility/utility";
  */
 const getNextTrack = async (game: IGame) => {
   const tracks = await deezerApi.getPlaylistTracks(game.playlistId);
+  const tracksWithPreview = tracks.filter((track) => track.preview !== "");
 
-  const shuffledTacks: Track[] = shuffle(tracks);
+  const shuffledTacks: Track[] = shuffle(tracksWithPreview);
 
   for (const track of shuffledTacks) {
-    if (!game.playedTracksId.includes(track.id)) {
+    if (track.preview && !game.playedTracksId.includes(track.id)) {
       return track;
     }
   }
@@ -76,7 +77,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     return res.status(404).json({ message: "Game not found" });
   }
 
-  if (game.maxQuestions === game.currentQuestionNb) {
+  if (game.maxTracks === game.currentTrackNb) {
     return finishGame(game, res);
   }
 
@@ -86,8 +87,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     return finishGame(game, res);
   }
 
-  const nbSimilarArtists = 6;
-  const similarArtists = await getSimilarArtists(nextTrack, nbSimilarArtists);
+  const similarArtists = await getSimilarArtists(nextTrack, game.maxSuggestions);
 
   const currentAnswerSuggestions = similarArtists.map((artist) => artist.name);
   currentAnswerSuggestions.push(nextTrack.artist.name);
@@ -97,7 +97,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     {
       currentTrackPreview: nextTrack.preview,
       currentAnswerSuggestions: shuffle(currentAnswerSuggestions),
-      currentQuestionNb: game.currentQuestionNb + 1,
+      currentTrackNb: game.currentTrackNb + 1,
       playedTracksId: [...game.playedTracksId, nextTrack.id],
     },
     { new: true }

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "../../../middleware/mongodb";
 import Game, { CreateGameDto, GameStatus, IGame } from "../../../models/Game";
+import deezerApi from "../../../utility/deezerApi";
 
 export type GameResponseType = {
   data?: IGame;
@@ -16,13 +17,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   const { ownerId, mode, playlistId }: CreateGameDto = JSON.parse(body);
 
+  const tracks = await deezerApi.getPlaylistTracks(playlistId);
+  const tracksWithPreview = tracks.filter((track) => track.preview !== "");
+
   const game = await Game.create({
     mode,
     playlistId,
+    totalPlaylistTracks: tracksWithPreview.length,
     playersId: [ownerId],
     status: GameStatus.Draft,
     ownerId,
-    currentQuestionNb: 0,
+    currentTrackNb: 0,
     currentAnswerSuggestions: [],
   });
 
