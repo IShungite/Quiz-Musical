@@ -47,9 +47,9 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
     };
   }, [dispatch]);
 
-  if (!currentPlayer) {
-    return router.push(RouteUrls.NewQuiz);
-  }
+  useEffect(() => {
+    if (!currentPlayer) router.push(RouteUrls.NewQuiz);
+  }, []);
 
   if (game.status === GameStatus.Finished) return <GameEnded game={game} players={players} />;
   return (

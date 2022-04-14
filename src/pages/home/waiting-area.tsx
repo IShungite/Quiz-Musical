@@ -25,12 +25,9 @@ export default function WaitingArea() {
     }
   }, [dispatch, game, router, startGameStatus]);
 
-  if (!game) {
-    router.push(RouteUrls.NewQuiz);
-    return null;
-  }
-
   const onClickPlay = () => {
+    if (!game) return;
+
     const updateGameDto: UpdateGameDto = {
       maxSuggestions,
       maxTracks,
@@ -50,13 +47,17 @@ export default function WaitingArea() {
     }
   };
 
+  useEffect(() => {
+    if (!game) router.push(RouteUrls.NewQuiz);
+  }, []);
+
   return (
     <>
       <Box textAlign="center">
         <Typography variant="h2">Salle d&apos;attente</Typography>
       </Box>
 
-      <Typography variant="h4">Mode: {game.mode}</Typography>
+      <Typography variant="h4">Mode: {game?.mode}</Typography>
       <Typography variant="h4">Options</Typography>
       <Typography variant="h5">Nombre de suggestions: {maxSuggestions} </Typography>
       <Slider
@@ -77,13 +78,13 @@ export default function WaitingArea() {
         step={1}
         marks
         min={3}
-        max={game.totalPlaylistTracks}
+        max={game?.totalPlaylistTracks}
         onChange={handleNbTracksChange}
       />
 
       <Typography variant="h4">Joueurs</Typography>
       <Grid container>
-        {game.playersId.map((playerId) => (
+        {game?.playersId.map((playerId) => (
           <Grid item xs={12} sm={6} md={4} key={playerId}>
             - {playerId}
           </Grid>
