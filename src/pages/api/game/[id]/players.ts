@@ -4,7 +4,7 @@ import Game from "../../../../models/Game";
 import Player, { IPlayer } from "../../../../models/Player";
 
 type Response = {
-  data?: IPlayer[];
+  data?: any;
   message?: string;
 };
 
