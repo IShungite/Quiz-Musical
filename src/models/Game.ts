@@ -94,8 +94,6 @@ const GameSchema = new mongoose.Schema({
 
 interface IGameDocument extends IGameBase, mongoose.Document {}
 
-mongoose.models = {};
-
-const Game: mongoose.Model<IGameDocument> = mongoose.models.Game || mongoose.model("Game", GameSchema);
+const Game: mongoose.Model<IGameDocument> = mongoose.models?.Game || mongoose.model("Game", GameSchema);
 
 export default Game;

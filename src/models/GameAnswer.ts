@@ -27,8 +27,6 @@ const GameAnswerSchema = new mongoose.Schema({
 
 interface IGameAnswerDocument extends IGameAnswerBase, mongoose.Document {}
 
-mongoose.models = {};
-
-const GameAnswer: mongoose.Model<IGameAnswerDocument> = mongoose.models.Game || mongoose.model("GameAnswer", GameAnswerSchema);
+const GameAnswer: mongoose.Model<IGameAnswerDocument> = mongoose.models?.Game || mongoose.model("GameAnswer", GameAnswerSchema);
 
 export default GameAnswer;

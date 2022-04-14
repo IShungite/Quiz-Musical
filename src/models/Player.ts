@@ -31,8 +31,6 @@ const PlayerSchema = new mongoose.Schema({
 
 interface IPlayerDocument extends IPlayerBase, mongoose.Document {}
 
-mongoose.models = {};
-
-const Player: mongoose.Model<IPlayerDocument> = mongoose.models.Player || mongoose.model("Player", PlayerSchema);
+const Player: mongoose.Model<IPlayerDocument> = mongoose.models?.Player || mongoose.model("Player", PlayerSchema);
 
 export default Player;
