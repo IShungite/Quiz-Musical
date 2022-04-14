@@ -5,6 +5,7 @@ export function shuffle(array: any[]) {
 
 const headers = new Headers();
 headers.append("Origin", "http://localhost:3000");
+headers.append("Access-Control-Allow-Origin", "*");
 
 export const tryFetch = async <T>(url: string, init?: RequestInit): Promise<T> => {
   try {
