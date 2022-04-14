@@ -13,7 +13,7 @@ export default function WaitingArea() {
   const dispatch = useAppDispatch();
 
   const defaultNbSuggestions = 6;
-  const defaultNbTracks = Math.min(10, game.totalPlaylistTracks ?? 10);
+  const defaultNbTracks = Math.min(10, game?.totalPlaylistTracks ?? 10);
 
   const [maxSuggestions, setMaxSuggestions] = React.useState(defaultNbSuggestions);
   const [maxTracks, setMaxTracks] = React.useState(defaultNbTracks);
