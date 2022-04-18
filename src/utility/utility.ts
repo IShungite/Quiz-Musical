@@ -1,11 +1,12 @@
+import { serverUrl } from "./config";
+
 // return a shuffled array
 export function shuffle(array: any[]) {
   return array.sort(() => 0.5 - Math.random());
 }
 
 const headers = new Headers();
-headers.append("Origin", "http://localhost:3000");
-headers.append("Access-Control-Allow-Origin", "*");
+headers.append("Origin", serverUrl);
 
 export const tryFetch = async <T>(url: string, init?: RequestInit): Promise<T> => {
   try {

@@ -18,6 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   const { ownerId, mode, playlistId }: CreateGameDto = JSON.parse(body);
 
   const tracks = await deezerApi.getPlaylistTracks(playlistId);
+
   const tracksWithPreview = tracks.filter((track) => track.preview !== "");
 
   const game = await Game.create({

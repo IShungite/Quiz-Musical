@@ -10,7 +10,8 @@ import { CreateAnswerDto } from "../../../models/Answer";
 import { GameStatus, IGame } from "../../../models/Game";
 import { IPlayer } from "../../../models/Player";
 import { clearAll, nextQuestion, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
-import { RouteUrls } from "../../../utility/config";
+import { RouteUrls, serverUrl } from "../../../utility/config";
+import { tryFetch } from "../../../utility/utility";
 
 export default function Quiz({ game, players }: { game: IGame; players: IPlayer[] }) {
   const dispatch = useAppDispatch();
@@ -89,8 +90,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
 
-  const response = await fetch(`http://localhost:3000/api/game/${id}`);
-  const game: IGame = (await response.json()).data;
+  const game = await tryFetch<IGame>(`${serverUrl}/api/game/${id}`);
 
   if (!game) {
     context.res.writeHead(400, { Location: RouteUrls.NewQuiz });
@@ -99,8 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: {} };
   }
 
-  const response2 = await fetch(`http://localhost:3000/api/game/${id}/players`);
-  const players: IPlayer[] = (await response2.json()).data;
+  const players = await tryFetch<IPlayer[]>(`${serverUrl}/api/game/${id}/players`);
 
   return {
     props: {

@@ -3,6 +3,7 @@ import { GameResponseType } from "..";
 import connectDB from "../../../../middleware/mongodb";
 import Game, { GameStatus } from "../../../../models/Game";
 import Player from "../../../../models/Player";
+import { serverUrl } from "../../../../utility/config";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { query, body } = req;
@@ -46,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   await Promise.all(resetPlayerPromises);
 
-  await fetch(`http://localhost:3000/api/game/${query.id}/next-question`);
+  await fetch(`${serverUrl}/api/game/${query.id}/next-question`);
 
   res.status(200).json({ data: gameUpdated });
 };

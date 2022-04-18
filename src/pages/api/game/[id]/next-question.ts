@@ -16,6 +16,7 @@ import { shuffle } from "../../../../utility/utility";
  */
 const getNextTrack = async (game: IGame) => {
   const tracks = await deezerApi.getPlaylistTracks(game.playlistId);
+
   const tracksWithPreview = tracks.filter((track) => track.preview !== "");
 
   const shuffledTacks: Track[] = shuffle(tracksWithPreview);
