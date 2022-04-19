@@ -48,7 +48,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   }
 
   const resetPlayerPromises = gameUpdated.playersId.map((playerId) =>
-    Player.findByIdAndUpdate(playerId, { hasAnswered: false, score: 0 }, { new: true }).exec()
+    Player.findByIdAndUpdate(playerId, { answer: "", score: 0 }, { new: true }).exec()
   );
 
   await Promise.all(resetPlayerPromises);

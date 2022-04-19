@@ -13,6 +13,7 @@ export enum WaitingAreaStatus {
 
 interface WaitingAreaState {
   game?: IGame;
+  goodAnswer?: string;
   createGameStatus: WaitingAreaStatus;
   createPlayerStatus: WaitingAreaStatus;
   joinGameStatus: WaitingAreaStatus;
@@ -66,11 +67,12 @@ export const nextQuestion = createAsyncThunk<IGame, string, { rejectValue: strin
     return thunkAPI.rejectWithValue(error.message);
   }
 });
-export const sendAnswer = createAsyncThunk<void, { gameId: string; createAnswerDto: CreateAnswerDto }, { rejectValue: string }>(
+export const sendAnswer = createAsyncThunk<string, { gameId: string; createAnswerDto: CreateAnswerDto }, { rejectValue: string }>(
   "waitingArea/sendAnswer",
   async ({ gameId, createAnswerDto }, thunkAPI) => {
     try {
-      await gameApi.sendAnswer(gameId, createAnswerDto);
+      const goodAnswer = await gameApi.sendAnswer(gameId, createAnswerDto);
+      return goodAnswer;
     } catch (err) {
       const error = err as Error;
       return thunkAPI.rejectWithValue(error.message);
@@ -129,6 +131,8 @@ const waitingAreaSlice = createSlice({
     },
     resetNextQuestion: (state) => {
       state.nextQuestionStatus = WaitingAreaStatus.None;
+      state.sendAnswerStatus = WaitingAreaStatus.None;
+      state.goodAnswer = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -201,8 +205,10 @@ const waitingAreaSlice = createSlice({
       .addCase(sendAnswer.pending, (state) => {
         state.sendAnswerStatus = WaitingAreaStatus.Loading;
       })
-      .addCase(sendAnswer.fulfilled, (state) => {
+      .addCase(sendAnswer.fulfilled, (state, { payload }) => {
         state.sendAnswerStatus = WaitingAreaStatus.Finished;
+
+        state.goodAnswer = payload;
       })
       .addCase(sendAnswer.rejected, (state, { payload }) => {
         state.sendAnswerStatus = WaitingAreaStatus.Error;

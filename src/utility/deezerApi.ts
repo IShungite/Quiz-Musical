@@ -4,9 +4,6 @@ import { Track } from "../models/Tracks";
 import { serverUrl } from "./config";
 import { tryFetch } from "./utility";
 
-// const baseUrl = "https://cors-anywhere.herokuapp.com/http://api.deezer.com/";
-const baseUrl = "https://api.deezer.com/";
-
 const searchPlaylists = async (searchTerm: string): Promise<Playlist[]> => {
   return tryFetch<Playlist[]>(`${serverUrl}/api/deezer/search/playlist/${searchTerm}`);
 };

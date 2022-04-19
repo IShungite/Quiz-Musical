@@ -1,7 +1,8 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import GameAnswer from "../../../components/GameAnswer/GameAnswer";
 import GameEnded from "../../../components/GameEnded/GameEnded";
 import PlayersScore from "../../../components/PlayersScore/PlayersScore";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
@@ -9,7 +10,7 @@ import useAudio from "../../../hooks/useAudio";
 import { CreateAnswerDto } from "../../../models/Answer";
 import { GameStatus, IGame } from "../../../models/Game";
 import { IPlayer } from "../../../models/Player";
-import { clearAll, nextQuestion, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
+import { clearAll, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
 import { RouteUrls, serverUrl } from "../../../utility/config";
 import { tryFetch } from "../../../utility/utility";
 
@@ -21,6 +22,8 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
 
   const { currentPlayer, sendAnswerStatus, nextQuestionStatus } = useAppSelector((state) => state.waitingArea);
 
+  const [showGoodAnswer, setShowGoodAnswer] = useState(false);
+
   const onClick = (answer: string) => {
     if (!currentPlayer) return;
 
@@ -30,17 +33,18 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
 
   useEffect(() => {
     if (sendAnswerStatus === WaitingAreaStatus.Finished) {
-      dispatch(nextQuestion(game._id));
+      setShowGoodAnswer(true);
+      stopAudio();
     }
-  }, [dispatch, game._id, sendAnswerStatus]);
+  }, [dispatch, game._id, sendAnswerStatus, stopAudio]);
 
   useEffect(() => {
     if (nextQuestionStatus === WaitingAreaStatus.Finished) {
       dispatch(resetNextQuestion());
-      stopAudio();
+      setShowGoodAnswer(false);
       router.replace(router.asPath); // reload props
     }
-  }, [dispatch, nextQuestionStatus, router, stopAudio]);
+  }, [dispatch, nextQuestionStatus, router]);
 
   useEffect(() => {
     return () => {
@@ -53,6 +57,10 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
   }, []);
 
   if (game.status === GameStatus.Finished) return <GameEnded game={game} players={players} />;
+
+  if (showGoodAnswer) {
+    return <GameAnswer game={game} />;
+  }
 
   return (
     <>

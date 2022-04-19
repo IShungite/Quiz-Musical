@@ -110,9 +110,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
 
   await GameAnswer.findOneAndUpdate({ gameId: query.id }, { gameId: query.id, answer: nextTrack.artist.name }, { upsert: true, new: true }).exec();
 
-  const promisesResetPlayer = gameUpdated.playersId.map((playerId) =>
-    Player.findByIdAndUpdate(playerId, { hasAnswered: false }, { new: true }).exec()
-  );
+  const promisesResetPlayer = gameUpdated.playersId.map((playerId) => Player.findByIdAndUpdate(playerId, { answer: "" }, { new: true }).exec());
 
   await Promise.all(promisesResetPlayer);
 

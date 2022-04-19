@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface IPlayerBase {
   name: string;
-  hasAnswered: boolean;
+  answer: string;
   score: number;
 }
 
@@ -19,9 +19,9 @@ const PlayerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  hasAnswered: {
-    type: Boolean,
-    default: false,
+  answer: {
+    type: String,
+    default: "",
   },
   score: {
     type: Number,

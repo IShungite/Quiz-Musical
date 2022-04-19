@@ -6,7 +6,7 @@ import GameAnswer from "../../../../models/GameAnswer";
 import Player from "../../../../models/Player";
 
 type AnswerResponseType = {
-  data?: boolean;
+  data?: string;
   message?: string;
 };
 
@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
     return res.status(404).json({ message: "Player not found" });
   }
 
-  if (player.hasAnswered) {
+  if (player.answer !== "") {
     return res.status(400).json({ message: "You already send the answer" });
   }
 
@@ -48,13 +48,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
     return res.status(404).json({ message: "Game answer not found" });
   }
 
-  if (gameAnswer.answer === answer) {
-    await Player.findByIdAndUpdate(playerId, { hasAnswered: true, score: player.score + 1 }, { new: true }).exec();
-    return res.status(200).json({ data: true });
-  }
+  const isAnswerGood = gameAnswer.answer === answer;
 
-  await Player.findByIdAndUpdate(playerId, { hasAnswered: true }, { new: true }).exec();
-  res.status(200).json({ data: false });
+  await Player.findByIdAndUpdate(playerId, { answer, score: isAnswerGood ? player.score + 1 : player.score }, { new: true }).exec();
+
+  res.status(200).json({ data: gameAnswer.answer });
 };
 
 export default connectDB(handler);

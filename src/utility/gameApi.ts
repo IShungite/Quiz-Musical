@@ -16,8 +16,8 @@ const nextQuestion = async (gameId: string): Promise<IGame> => {
   return tryFetch<IGame>(`${serverUrl}/api/game/${gameId}/next-question`);
 };
 
-const sendAnswer = async (gameId: string, createAnswerDto: CreateAnswerDto): Promise<void> => {
-  await tryFetch<void>(`${serverUrl}/api/game/${gameId}/answer`, { body: JSON.stringify(createAnswerDto), method: "POST" });
+const sendAnswer = async (gameId: string, createAnswerDto: CreateAnswerDto): Promise<string> => {
+  return await tryFetch<string>(`${serverUrl}/api/game/${gameId}/answer`, { body: JSON.stringify(createAnswerDto), method: "POST" });
 };
 
 const createPlayer = async (createPlayerDto: CreatePlayerDto): Promise<IPlayer> => {
