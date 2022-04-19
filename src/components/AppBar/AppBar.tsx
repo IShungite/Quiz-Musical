@@ -11,7 +11,7 @@ type PageInfo = {
 };
 
 const pagesLeft: PageInfo[] = [{ name: "Accueil", url: RouteUrls.Index }];
-const pagesRight: PageInfo[] = [{ name: "Connexion", url: RouteUrls.Login }];
+const pagesRight: PageInfo[] = [];
 
 const pagesLeftLogin: PageInfo[] = [
   { name: "Accueil", url: RouteUrls.Index },
