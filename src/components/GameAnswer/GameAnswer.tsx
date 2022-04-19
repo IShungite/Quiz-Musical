@@ -24,7 +24,7 @@ export default function GameAnswer({ game }: { game: IGame }) {
             dispatch(nextQuestion(game._id));
           }}
         >
-          Next question
+          Musique suivante
         </LoadingButton>
       </Box>
     </>
