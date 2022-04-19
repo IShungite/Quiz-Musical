@@ -24,7 +24,7 @@ export default function CreatePlayerDialog({ open, setOpen }: { open: boolean; s
 
   return (
     <Dialog open={open}>
-      <DialogTitle>New player</DialogTitle>
+      <DialogTitle>Nouveau joueur</DialogTitle>
       <DialogContent>
         <CreatePlayerForm />
       </DialogContent>

@@ -14,7 +14,7 @@ export default function GameAnswer({ game }: { game: IGame }) {
     <>
       <Box textAlign="center">
         <Typography variant="h2">
-          The answer is <span style={{ fontStyle: "italic" }}>{goodAnswer}</span>
+          La réponse est <span style={{ fontStyle: "italic" }}>{goodAnswer}</span>
         </Typography>
         <Button
           variant="contained"

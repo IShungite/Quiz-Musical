@@ -14,7 +14,7 @@ export default function CreatePlayerForm() {
   return (
     <Box>
       <TextField type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <Button onClick={onClickCreate}>Create</Button>
+      <Button onClick={onClickCreate}>Créer</Button>
     </Box>
   );
 }

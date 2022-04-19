@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import { Playlist } from "../../models/Playlist";
 import { useRouter } from "next/router";
@@ -6,7 +6,6 @@ import { RouteUrls } from "../../utility/config";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { createGame, resetCreateGameStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
 import { CreateGameDto, GameMode } from "../../models/Game";
-import CreatePlayerDialog from "../CreatePlayerDialog/CreatePlayerDialog";
 
 type Props = {
   playlist: Playlist;
@@ -18,11 +17,8 @@ export default function MusicCard({ playlist }: Props) {
 
   const { createGameStatus, currentPlayer } = useAppSelector((state) => state.waitingArea);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   const onClick = () => {
     if (!currentPlayer) {
-      setDialogOpen(true);
       return;
     }
     const createGameDto: CreateGameDto = {
@@ -59,7 +55,6 @@ export default function MusicCard({ playlist }: Props) {
           </CardContent>
         </CardActionArea>
       </Card>
-      <CreatePlayerDialog open={dialogOpen} setOpen={setDialogOpen} />
     </>
   );
 }
