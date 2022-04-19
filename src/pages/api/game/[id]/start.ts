@@ -6,7 +6,13 @@ import Player from "../../../../models/Player";
 import { serverUrl } from "../../../../utility/config";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
-  const { query, body } = req;
+  const { query, body, method } = req;
+
+  if (method !== "PATCH") {
+    return res.status(405).json({
+      message: "Method not allowed",
+    });
+  }
 
   if (typeof query.id !== "string") {
     return res.status(404).json({ message: "Wrong game id" });

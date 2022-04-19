@@ -9,7 +9,7 @@ const createGame = async (createGameDto: CreateGameDto): Promise<IGame> => {
 };
 
 const startGame = async (gameId: string, updateGameDto: UpdateGameDto): Promise<IGame> => {
-  return tryFetch<IGame>(`${serverUrl}/api/game/${gameId}/start`, { body: JSON.stringify(updateGameDto), method: "POST" });
+  return tryFetch<IGame>(`${serverUrl}/api/game/${gameId}/start`, { body: JSON.stringify(updateGameDto), method: "PATCH" });
 };
 
 const nextQuestion = async (gameId: string): Promise<IGame> => {
