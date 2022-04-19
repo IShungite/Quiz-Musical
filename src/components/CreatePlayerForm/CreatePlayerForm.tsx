@@ -1,11 +1,14 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { useAppDispatch } from "../../hooks/reducer";
-import { createPlayer } from "../../reducers/waitingAreaSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import { createPlayer, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { LoadingButton } from "@mui/lab";
 
 export default function CreatePlayerForm() {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
+
+  const { createPlayerStatus } = useAppSelector((state) => state.waitingArea);
 
   const onClickCreate = () => {
     dispatch(createPlayer({ name }));
@@ -14,7 +17,9 @@ export default function CreatePlayerForm() {
   return (
     <Box>
       <TextField type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <Button onClick={onClickCreate}>Créer</Button>
+      <LoadingButton loading={createPlayerStatus === WaitingAreaStatus.Loading} onClick={onClickCreate}>
+        Créer
+      </LoadingButton>
     </Box>
   );
 }

@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -76,14 +77,15 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
           <Grid container alignItems="center" justifyContent="center" spacing={2}>
             {game.currentAnswerSuggestions.map((answer) => (
               <Grid item xs={12} sm={6} key={answer} textAlign="center">
-                <Button
+                <LoadingButton
+                  loading={sendAnswerStatus === WaitingAreaStatus.Loading}
                   variant="outlined"
                   onClick={() => {
                     onClick(answer);
                   }}
                 >
                   {answer}
-                </Button>
+                </LoadingButton>
               </Grid>
             ))}
           </Grid>

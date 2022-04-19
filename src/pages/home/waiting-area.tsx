@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Slider, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -92,9 +93,9 @@ export default function WaitingArea() {
       </Grid>
 
       <Box textAlign="center">
-        <Button variant="outlined" onClick={onClickPlay}>
+        <LoadingButton loading={startGameStatus === WaitingAreaStatus.Loading} variant="outlined" onClick={onClickPlay}>
           Jouer
-        </Button>
+        </LoadingButton>
       </Box>
     </>
   );
