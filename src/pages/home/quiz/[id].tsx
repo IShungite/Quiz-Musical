@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -38,7 +38,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
     if (nextQuestionStatus === WaitingAreaStatus.Finished) {
       dispatch(resetNextQuestion());
       stopAudio();
-      router.replace(router.asPath);
+      router.replace(router.asPath); // reload props
     }
   }, [dispatch, nextQuestionStatus, router, stopAudio]);
 
@@ -53,6 +53,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
   }, []);
 
   if (game.status === GameStatus.Finished) return <GameEnded game={game} players={players} />;
+
   return (
     <>
       <Box textAlign="center" sx={{ mb: 5 }}>
