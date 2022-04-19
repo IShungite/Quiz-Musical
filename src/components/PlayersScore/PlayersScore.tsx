@@ -1,8 +1,9 @@
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import React from "react";
+import { IGame } from "../../models/Game";
 import { IPlayer } from "../../models/Player";
 
-export default function PlayersScore({ players }: { players: IPlayer[] }) {
+export default function PlayersScore({ game, players }: { game: IGame; players: IPlayer[] }) {
   return (
     <Grid item>
       <TableContainer component={Paper}>
@@ -11,7 +12,7 @@ export default function PlayersScore({ players }: { players: IPlayer[] }) {
             <TableRow>
               <TableCell align="left">Rang</TableCell>
               <TableCell align="left">Nom</TableCell>
-              <TableCell align="left">Score</TableCell>
+              <TableCell align="left">Score / {game.maxTracks}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

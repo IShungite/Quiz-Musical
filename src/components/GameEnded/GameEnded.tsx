@@ -10,7 +10,7 @@ export default function GameEnded({ game, players }: { game: IGame; players: IPl
       <Box textAlign="center" sx={{ mb: 5 }}>
         <Typography variant="h2">Partie terminée!</Typography>
       </Box>
-      <PlayersScore players={players}></PlayersScore>
+      <PlayersScore game={game} players={players}></PlayersScore>
     </>
   );
 }

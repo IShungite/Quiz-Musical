@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -24,44 +24,47 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
   const { currentPlayer, sendAnswerStatus, nextQuestionStatus } = useAppSelector((state) => state.waitingArea);
 
   const [showGoodAnswer, setShowGoodAnswer] = useState(false);
+  const [answerSelected, setAnswerSelected] = useState<string | undefined>(undefined);
 
   const onClick = (answer: string) => {
     if (!currentPlayer) return;
 
     const createAnswerDto: CreateAnswerDto = { answer, playerId: currentPlayer._id };
     dispatch(sendAnswer({ gameId: game._id, createAnswerDto }));
+    setAnswerSelected(answer);
   };
 
+  // Triggered after sending the answer
   useEffect(() => {
     if (sendAnswerStatus === WaitingAreaStatus.Finished) {
       setShowGoodAnswer(true);
+      router.replace(router.asPath); // reload props
       stopAudio();
     }
   }, [dispatch, game._id, sendAnswerStatus, stopAudio]);
 
+  // Triggered after sending the next question
   useEffect(() => {
     if (nextQuestionStatus === WaitingAreaStatus.Finished) {
       dispatch(resetNextQuestion());
       setShowGoodAnswer(false);
       router.replace(router.asPath); // reload props
     }
-  }, [dispatch, nextQuestionStatus, router]);
+  }, [dispatch, nextQuestionStatus]);
 
+  // Triggered when component is unmounted
   useEffect(() => {
     return () => {
       dispatch(clearAll());
     };
   }, [dispatch]);
 
+  // Triggered when component is mounted to check if there is a currentPlayer
   useEffect(() => {
     if (!currentPlayer) router.push(RouteUrls.NewQuiz);
-  }, []);
+  }, [currentPlayer]);
 
   if (game.status === GameStatus.Finished) return <GameEnded game={game} players={players} />;
-
-  if (showGoodAnswer) {
-    return <GameAnswer game={game} />;
-  }
 
   return (
     <>
@@ -74,24 +77,28 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
 
       <Grid container justifyContent="space-evenly" spacing={4}>
         <Grid item>
-          <Grid container alignItems="center" justifyContent="center" spacing={2}>
-            {game.currentAnswerSuggestions.map((answer) => (
-              <Grid item xs={12} sm={6} key={answer} textAlign="center">
-                <LoadingButton
-                  loading={sendAnswerStatus === WaitingAreaStatus.Loading}
-                  variant="outlined"
-                  onClick={() => {
-                    onClick(answer);
-                  }}
-                >
-                  {answer}
-                </LoadingButton>
-              </Grid>
-            ))}
-          </Grid>
+          {showGoodAnswer ? (
+            <GameAnswer game={game} answerSelected={answerSelected ?? ""} />
+          ) : (
+            <Grid container alignItems="center" justifyContent="center" spacing={2}>
+              {game.currentAnswerSuggestions.map((answer) => (
+                <Grid item xs={12} sm={6} key={answer} textAlign="center">
+                  <LoadingButton
+                    loading={sendAnswerStatus === WaitingAreaStatus.Loading}
+                    variant="outlined"
+                    onClick={() => {
+                      onClick(answer);
+                    }}
+                  >
+                    {answer}
+                  </LoadingButton>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Grid>
         <Grid item>
-          <PlayersScore players={players} />
+          <PlayersScore game={game} players={players} />
         </Grid>
       </Grid>
     </>
