@@ -11,7 +11,7 @@ import useAudio from "../../../hooks/useAudio";
 import { CreateAnswerDto } from "../../../models/Answer";
 import { GameStatus, IGame } from "../../../models/Game";
 import { IPlayer } from "../../../models/Player";
-import { clearAll, resetNextQuestion, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
+import { clearAll, resetNextQuestion, resetSendAnswerStatus, sendAnswer, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
 import { RouteUrls, serverUrl } from "../../../utility/config";
 import { tryFetch } from "../../../utility/utility";
 
@@ -37,11 +37,12 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
   // Triggered after sending the answer
   useEffect(() => {
     if (sendAnswerStatus === WaitingAreaStatus.Finished) {
+      dispatch(resetSendAnswerStatus());
       setShowGoodAnswer(true);
       router.replace(router.asPath); // reload props
       stopAudio();
     }
-  }, [dispatch, game._id, sendAnswerStatus, stopAudio]);
+  }, [dispatch, game._id, router, sendAnswerStatus, stopAudio]);
 
   // Triggered after sending the next question
   useEffect(() => {
@@ -50,7 +51,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
       setShowGoodAnswer(false);
       router.replace(router.asPath); // reload props
     }
-  }, [dispatch, nextQuestionStatus]);
+  }, [dispatch, nextQuestionStatus, router]);
 
   // Triggered when component is unmounted
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
   // Triggered when component is mounted to check if there is a currentPlayer
   useEffect(() => {
     if (!currentPlayer) router.push(RouteUrls.NewQuiz);
-  }, [currentPlayer]);
+  }, [currentPlayer, router]);
 
   if (game.status === GameStatus.Finished) return <GameEnded game={game} players={players} />;
 
