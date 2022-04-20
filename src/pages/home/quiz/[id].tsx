@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import GameAnswer from "../../../components/GameAnswer/GameAnswer";
 import GameEnded from "../../../components/GameEnded/GameEnded";
+import GameTitle from "../../../components/GameTitle/GameTitle";
 import PlayersScore from "../../../components/PlayersScore/PlayersScore";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
 import useAudio from "../../../hooks/useAudio";
@@ -69,12 +70,7 @@ export default function Quiz({ game, players }: { game: IGame; players: IPlayer[
 
   return (
     <>
-      <Box textAlign="center" sx={{ mb: 5 }}>
-        <Typography variant="h2">Quel est le nom de l&apos;artiste ?</Typography>
-        <Typography variant="h4">
-          {game.currentTrackNb}/{game.maxTracks}
-        </Typography>
-      </Box>
+      <GameTitle game={game} />
 
       <Grid container justifyContent="space-evenly" spacing={4}>
         <Grid item>
