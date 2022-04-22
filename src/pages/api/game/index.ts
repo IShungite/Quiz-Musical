@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "../../../middleware/mongodb";
 import Game, { CreateGameDto, GameStatus, IGame } from "../../../models/Game";
+import Player from "../../../models/Player";
 import deezerApi from "../../../utility/deezerApi";
 
 export type GameResponseType = {
@@ -31,6 +32,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     currentTrackNb: 0,
     currentAnswerSuggestions: [],
   });
+
+  await Player.findByIdAndUpdate(ownerId, { gameId: game._id }).exec();
 
   res.status(200).json({ data: game });
 };

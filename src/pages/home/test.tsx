@@ -1,6 +1,6 @@
 import Pusher from "pusher-js";
 import React, { useEffect, useState } from "react";
-import { serverUrl } from "../../utility/config";
+import { pusherAppkey, serverUrl } from "../../utility/config";
 import { tryFetch } from "../../utility/utility";
 
 interface Chat {
@@ -17,8 +17,6 @@ export default function Test() {
   useEffect(() => {
     Pusher.logToConsole = true;
 
-    // process.env.PUSHER_APP_KEY // RETURN UNDEFINED
-    const pusherAppkey = "97911bb6f66dab3d9595";
     const pusher = new Pusher(pusherAppkey, {
       cluster: "eu",
     });

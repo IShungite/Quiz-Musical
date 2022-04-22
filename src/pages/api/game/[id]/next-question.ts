@@ -7,6 +7,7 @@ import Player from "../../../../models/Player";
 import { Track } from "../../../../models/Tracks";
 import deezerApi from "../../../../utility/deezerApi";
 import { shuffle } from "../../../../utility/utility";
+import { pusher } from "../../pusher";
 
 /**
  * It gets the tracks of a playlist, shuffles them, and returns the first track that hasn't been played
@@ -63,6 +64,10 @@ const finishGame = async (game: IGame, res: NextApiResponse) => {
     return res.status(404).json({ message: "Game not updated" });
   }
 
+  await pusher.trigger(`quiz_room_${game._id}`, "next-question", {
+    game: gameUpdated,
+  });
+
   return res.status(200).json({ data: gameUpdated });
 };
 
@@ -113,6 +118,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   const promisesResetPlayer = gameUpdated.playersId.map((playerId) => Player.findByIdAndUpdate(playerId, { answer: "" }, { new: true }).exec());
 
   await Promise.all(promisesResetPlayer);
+
+  await pusher.trigger(`quiz_room_${query.id}`, "next-question", {
+    game: gameUpdated,
+  });
 
   res.status(200).json({ data: gameUpdated });
 };

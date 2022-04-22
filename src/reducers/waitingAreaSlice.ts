@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateAnswerDto } from "../models/Answer";
 import { CreateGameDto, IGame, UpdateGameDto } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
@@ -13,6 +13,7 @@ export enum WaitingAreaStatus {
 
 interface WaitingAreaState {
   game?: IGame;
+  players: IPlayer[];
   goodAnswer?: string;
   createGameStatus: WaitingAreaStatus;
   createPlayerStatus: WaitingAreaStatus;
@@ -22,9 +23,11 @@ interface WaitingAreaState {
   nextQuestionStatus: WaitingAreaStatus;
   errorMessage?: string;
   currentPlayer?: IPlayer;
+  answerSelected?: string;
 }
 
 const initialWaitingArea: WaitingAreaState = {
+  players: [],
   createGameStatus: WaitingAreaStatus.None,
   createPlayerStatus: WaitingAreaStatus.None,
   joinGameStatus: WaitingAreaStatus.None,
@@ -45,6 +48,15 @@ export const createGame = createAsyncThunk<IGame, CreateGameDto, { rejectValue: 
     }
   }
 );
+
+export const getPlayers = createAsyncThunk<IPlayer[], string, { rejectValue: string }>("waitingArea/getPlayers", async (gameId, thunkAPI) => {
+  try {
+    return await gameApi.getPlayers(gameId);
+  } catch (err) {
+    const error = err as Error;
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
 export const startGame = createAsyncThunk<IGame, { gameId: string; updateGameDto: UpdateGameDto }, { rejectValue: string }>(
   "waitingArea/startGame",
@@ -80,11 +92,13 @@ export const sendAnswer = createAsyncThunk<string, { gameId: string; createAnswe
   }
 );
 
-export const joinGame = createAsyncThunk<void, { gameId: string; playerId: string }, { rejectValue: string }>(
+export const joinGame = createAsyncThunk<IGame, { gameId: string; playerId: string }, { rejectValue: string }>(
   "waitingArea/joinGame",
   async ({ gameId, playerId }, thunkAPI) => {
     try {
-      await gameApi.joinGame(gameId, playerId);
+      const game = await gameApi.joinGame(gameId, playerId);
+      console.log(game);
+      return game;
     } catch (err) {
       const error = err as Error;
       return thunkAPI.rejectWithValue(error.message);
@@ -108,8 +122,25 @@ const waitingAreaSlice = createSlice({
   name: "waitingArea",
   initialState: initialWaitingArea,
   reducers: {
+    updateCurrentGameLocal: (state, { payload }: PayloadAction<IGame>) => {
+      state.game = payload;
+    },
+    updateCurrentPlayersLocal: (state, { payload }: PayloadAction<IPlayer[]>) => {
+      state.players = payload;
+    },
+    addCurrentPlayerLocal: (state, { payload }: PayloadAction<IPlayer>) => {
+      state.players = [...state.players, payload];
+    },
+    removeCurrentPlayerLocal: (state, { payload }: PayloadAction<string>) => {
+      state.players = state.players.filter((player) => player._id !== payload);
+    },
+    setAnswerSelected: (state, { payload }: PayloadAction<string | undefined>) => {
+      state.answerSelected = payload;
+    },
     clearAll: (state) => {
       state.game = undefined;
+      state.players = [];
+      state.answerSelected = undefined;
       state.createGameStatus = WaitingAreaStatus.None;
       state.startGameStatus = WaitingAreaStatus.None;
       state.joinGameStatus = WaitingAreaStatus.None;
@@ -158,7 +189,7 @@ const waitingAreaSlice = createSlice({
       .addCase(startGame.fulfilled, (state, { payload }) => {
         state.startGameStatus = WaitingAreaStatus.Finished;
 
-        state.game = { ...payload };
+        // state.game = { ...payload };
       })
       .addCase(startGame.rejected, (state, { payload }) => {
         state.startGameStatus = WaitingAreaStatus.Error;
@@ -183,8 +214,10 @@ const waitingAreaSlice = createSlice({
       .addCase(joinGame.pending, (state) => {
         state.joinGameStatus = WaitingAreaStatus.Loading;
       })
-      .addCase(joinGame.fulfilled, (state) => {
+      .addCase(joinGame.fulfilled, (state, { payload }) => {
         state.joinGameStatus = WaitingAreaStatus.Finished;
+
+        state.game = { ...payload };
       })
       .addCase(joinGame.rejected, (state, { payload }) => {
         state.joinGameStatus = WaitingAreaStatus.Error;
@@ -197,7 +230,7 @@ const waitingAreaSlice = createSlice({
       })
       .addCase(nextQuestion.fulfilled, (state, { payload }) => {
         state.nextQuestionStatus = WaitingAreaStatus.Finished;
-        state.game = { ...payload };
+        // state.game = { ...payload };
       })
       .addCase(nextQuestion.rejected, (state, { payload }) => {
         state.nextQuestionStatus = WaitingAreaStatus.Error;
@@ -211,17 +244,26 @@ const waitingAreaSlice = createSlice({
       .addCase(sendAnswer.fulfilled, (state, { payload }) => {
         state.sendAnswerStatus = WaitingAreaStatus.Finished;
 
-        state.goodAnswer = payload;
+        // state.goodAnswer = payload;
       })
       .addCase(sendAnswer.rejected, (state, { payload }) => {
         state.sendAnswerStatus = WaitingAreaStatus.Error;
 
         state.errorMessage = payload;
+      })
+
+      .addCase(getPlayers.fulfilled, (state, { payload }) => {
+        state.players = payload;
       });
   },
 });
 
 export const {
+  updateCurrentGameLocal,
+  updateCurrentPlayersLocal,
+  addCurrentPlayerLocal,
+  removeCurrentPlayerLocal,
+  setAnswerSelected,
   clearAll,
   resetSendAnswerStatus,
   resetCreateGameStatus,

@@ -4,6 +4,7 @@ import { CreateAnswerDto } from "../../../../models/Answer";
 import Game, { GameStatus } from "../../../../models/Game";
 import GameAnswer from "../../../../models/GameAnswer";
 import Player from "../../../../models/Player";
+import { pusher } from "../../pusher";
 
 type AnswerResponseType = {
   data?: string;
@@ -32,13 +33,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
     return res.status(400).json({ message: "You are not in this game" });
   }
 
-  const player = await Player.findById(playerId).exec();
+  const currentPlayer = await Player.findById(playerId).exec();
 
-  if (!player) {
+  if (!currentPlayer) {
     return res.status(404).json({ message: "Player not found" });
   }
 
-  if (player.answer !== "") {
+  if (currentPlayer.answer !== "") {
     return res.status(400).json({ message: "You already send the answer" });
   }
 
@@ -50,9 +51,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
 
   const isAnswerGood = gameAnswer.answer === answer;
 
-  await Player.findByIdAndUpdate(playerId, { answer, score: isAnswerGood ? player.score + 1 : player.score }, { new: true }).exec();
+  await Player.findByIdAndUpdate(playerId, { answer, score: isAnswerGood ? currentPlayer.score + 1 : currentPlayer.score }, { new: true }).exec();
 
-  res.status(200).json({ data: gameAnswer.answer });
+  const players = await Player.find({ gameId: query.id }).exec();
+  console.log(players);
+  for (const player of players) {
+    if (player.answer === "") {
+      return res.status(200).json({ message: "Waiting for other players" });
+    }
+  }
+
+  await pusher.trigger(`quiz_room_${query.id}`, "show-good-answer", {
+    goodAnswer: gameAnswer.answer,
+    players,
+  });
+
+  res.status(200).json({});
 };
 
 export default connectDB(handler);

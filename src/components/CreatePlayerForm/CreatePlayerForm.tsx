@@ -16,7 +16,7 @@ export default function CreatePlayerForm() {
 
   return (
     <Box>
-      <TextField type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      <TextField label="Nouveau joueur" type="text" value={name} onChange={(e) => setName(e.target.value)} />
       <LoadingButton loading={createPlayerStatus === WaitingAreaStatus.Loading} onClick={onClickCreate}>
         Créer
       </LoadingButton>

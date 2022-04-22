@@ -4,6 +4,7 @@ import { IGame } from "../../models/Game";
 import { IPlayer } from "../../models/Player";
 
 export default function PlayersScore({ game, players }: { game: IGame; players: IPlayer[] }) {
+  const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
   return (
     <Grid item>
       <TableContainer component={Paper}>
@@ -16,7 +17,7 @@ export default function PlayersScore({ game, players }: { game: IGame; players: 
             </TableRow>
           </TableHead>
           <TableBody>
-            {players.map((player, i) => (
+            {sortedPlayers.map((player, i) => (
               <TableRow key={player._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell align="left">{i + 1}</TableCell>
                 <TableCell align="left">{player.name}</TableCell>

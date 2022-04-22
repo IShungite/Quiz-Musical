@@ -16,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     message,
     sender,
   });
-  console.log("test");
 
   res.json({ message: "completed" });
 }

@@ -4,6 +4,7 @@ export interface IPlayerBase {
   name: string;
   answer: string;
   score: number;
+  gameId: string;
 }
 
 export interface IPlayer extends IPlayerBase {
@@ -26,6 +27,9 @@ const PlayerSchema = new mongoose.Schema({
   score: {
     type: Number,
     default: 0,
+  },
+  gameId: {
+    type: String,
   },
 });
 

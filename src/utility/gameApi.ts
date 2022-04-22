@@ -17,15 +17,19 @@ const nextQuestion = async (gameId: string): Promise<IGame> => {
 };
 
 const sendAnswer = async (gameId: string, createAnswerDto: CreateAnswerDto): Promise<string> => {
-  return await tryFetch<string>(`${serverUrl}/api/game/${gameId}/answer`, { body: JSON.stringify(createAnswerDto), method: "POST" });
+  return tryFetch<string>(`${serverUrl}/api/game/${gameId}/answer`, { body: JSON.stringify(createAnswerDto), method: "POST" });
 };
 
 const createPlayer = async (createPlayerDto: CreatePlayerDto): Promise<IPlayer> => {
   return tryFetch<IPlayer>(`${serverUrl}/api/player`, { body: JSON.stringify(createPlayerDto), method: "POST" });
 };
 
-const joinGame = async (gameId: string, playerId: string): Promise<void> => {
-  await tryFetch<void>(`${serverUrl}/api/game/${gameId}/join`, { body: playerId, method: "POST" });
+const joinGame = async (gameId: string, playerId: string): Promise<IGame> => {
+  return tryFetch<IGame>(`${serverUrl}/api/game/${gameId}/join`, { body: playerId, method: "POST" });
+};
+
+const getPlayers = async (gameId: string): Promise<IPlayer[]> => {
+  return tryFetch<IPlayer[]>(`${serverUrl}/api/game/${gameId}/players`);
 };
 
 const gameApi = {
@@ -35,6 +39,7 @@ const gameApi = {
   sendAnswer,
   joinGame,
   createPlayer,
+  getPlayers,
 };
 
 export default gameApi;

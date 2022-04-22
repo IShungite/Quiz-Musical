@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import { Playlist } from "../../models/Playlist";
 import { useRouter } from "next/router";
-import { RouteUrls } from "../../utility/config";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { createGame, resetCreateGameStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
 import { CreateGameDto, GameMode } from "../../models/Game";
@@ -30,7 +29,7 @@ export default function MusicCard({ playlist }: Props) {
   };
 
   useEffect(() => {
-    if (createGameStatus === WaitingAreaStatus.Finished) router.push(RouteUrls.WaitingArea);
+    if (createGameStatus === WaitingAreaStatus.Finished) router.push("/home/quiz");
   }, [router, createGameStatus]);
 
   // Reset createGameStatus when component is unmounted
