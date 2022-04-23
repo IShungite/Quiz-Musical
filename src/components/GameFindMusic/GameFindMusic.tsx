@@ -4,8 +4,9 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import useAudio from "../../hooks/useAudio";
 import { CreateAnswerDto } from "../../models/Answer";
+import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
-import { sendAnswer, setAnswerSelected, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { sendAnswer, setAnswerSelected } from "../../reducers/waitingAreaSlice";
 import GameTitle from "../GameTitle/GameTitle";
 import PlayersScore from "../PlayersScore/PlayersScore";
 
@@ -34,7 +35,7 @@ export default function GameFindMusic({ game }: { game: IGame }) {
             {game.currentAnswerSuggestions.map((answer) => (
               <Grid item xs={12} sm={6} key={answer} textAlign="center">
                 <LoadingButton
-                  loading={sendAnswerStatus === WaitingAreaStatus.Loading}
+                  loading={sendAnswerStatus === FetchStatus.Loading}
                   variant="outlined"
                   onClick={() => {
                     onClickSendAnswer(answer);

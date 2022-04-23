@@ -28,7 +28,6 @@ export default function Quiz() {
 
   const onPlayerJoin = useCallback(
     (player: IPlayer) => {
-      console.log("player joined", player);
       dispatch(addCurrentPlayerLocal(player));
     },
     [dispatch]
@@ -36,15 +35,10 @@ export default function Quiz() {
 
   const onPlayerLeave = useCallback(
     (player: IPlayer) => {
-      console.log("player leave", player._id);
       dispatch(removeCurrentPlayerLocal(player._id));
     },
     [dispatch]
   );
-
-  const onStart = useCallback(() => {
-    console.log("start");
-  }, []);
 
   const onNextQuestion = useCallback(
     (newGame: IGame) => {
@@ -64,7 +58,7 @@ export default function Quiz() {
     [dispatch]
   );
 
-  const { isConnected } = usePusher({ onPlayerJoin, onPlayerLeave, onStart, onNextQuestion, onShowGoodAnswer });
+  const { isConnected } = usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer });
 
   useEffect(() => {
     if (isConnected && game && players.length === 0) {

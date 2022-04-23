@@ -2,8 +2,9 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Grid, Slider, Typography } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import { FetchStatus } from "../../models/FetchStatus";
 import { IGame, UpdateGameDto } from "../../models/Game";
-import { startGame, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { startGame } from "../../reducers/waitingAreaSlice";
 
 export default function GameDraft({ game }: { game: IGame }) {
   const dispatch = useAppDispatch();
@@ -86,7 +87,7 @@ export default function GameDraft({ game }: { game: IGame }) {
 
       {isOwner && (
         <Box textAlign="center">
-          <LoadingButton loading={startGameStatus === WaitingAreaStatus.Loading} variant="outlined" onClick={onClickPlay}>
+          <LoadingButton loading={startGameStatus === FetchStatus.Loading} variant="outlined" onClick={onClickPlay}>
             Jouer
           </LoadingButton>
         </Box>

@@ -1,9 +1,10 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import CreatePlayerForm from "../../components/CreatePlayerForm/CreatePlayerForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { joinGame, resetCreatePlayerStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { FetchStatus } from "../../models/FetchStatus";
+import { joinGame, resetCreatePlayerStatus } from "../../reducers/waitingAreaSlice";
 import { RouteUrls } from "../../utility/config";
 
 export default function JoinQuiz() {
@@ -20,7 +21,7 @@ export default function JoinQuiz() {
   };
 
   useEffect(() => {
-    if (joinGameStatus === WaitingAreaStatus.Finished) {
+    if (joinGameStatus === FetchStatus.Finished) {
       router.push(RouteUrls.Quiz);
     }
   }, [joinGameStatus, router]);

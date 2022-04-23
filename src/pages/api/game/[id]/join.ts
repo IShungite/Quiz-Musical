@@ -33,8 +33,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     player,
   });
 
-  console.log(`Trigger join on quiz_room_${query.id}`);
-
   res.status(200).json({ data: gameUpdated });
 };
 

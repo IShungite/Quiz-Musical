@@ -3,9 +3,10 @@ import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/m
 import { Playlist } from "../../models/Playlist";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { createGame, resetCreateGameStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { createGame, resetCreateGameStatus } from "../../reducers/waitingAreaSlice";
 import { CreateGameDto, GameMode } from "../../models/Game";
 import { RouteUrls } from "../../utility/config";
+import { FetchStatus } from "../../models/FetchStatus";
 
 type Props = {
   playlist: Playlist;
@@ -30,7 +31,7 @@ export default function MusicCard({ playlist }: Props) {
   };
 
   useEffect(() => {
-    if (createGameStatus === WaitingAreaStatus.Finished) router.push(RouteUrls.Quiz);
+    if (createGameStatus === FetchStatus.Finished) router.push(RouteUrls.Quiz);
   }, [router, createGameStatus]);
 
   // Reset createGameStatus when component is unmounted

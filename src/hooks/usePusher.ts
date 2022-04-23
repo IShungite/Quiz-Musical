@@ -8,12 +8,11 @@ import { useAppSelector } from "./reducer";
 interface Props {
   onPlayerJoin: (player: IPlayer) => void;
   onPlayerLeave: (player: IPlayer) => void;
-  onStart: () => void;
   onNextQuestion: (game: IGame) => void;
   onShowGoodAnswer: (goodAnswer: string, players: IPlayer[]) => void;
 }
 
-export default function usePusher({ onPlayerJoin, onPlayerLeave, onStart, onNextQuestion, onShowGoodAnswer }: Props) {
+export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer }: Props) {
   const { game } = useAppSelector((state) => state.waitingArea);
 
   const [isConnected, setIsConnected] = React.useState(false);
@@ -43,12 +42,6 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onStart, onNext
       onPlayerLeave(data);
     });
 
-    channel.bind("start", function () {
-      console.log("start");
-
-      onStart();
-    });
-
     channel.bind("next-question", function ({ game }: { game: IGame }) {
       console.log("next-question");
 
@@ -71,7 +64,7 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onStart, onNext
       pusher.unsubscribe(`quiz_room_${game._id}`);
       setIsConnected(false);
     };
-  }, [game?._id, onNextQuestion, onPlayerJoin, onPlayerLeave, onShowGoodAnswer, onStart]);
+  }, [game?._id, onNextQuestion, onPlayerJoin, onPlayerLeave, onShowGoodAnswer]);
 
   return {
     isConnected,

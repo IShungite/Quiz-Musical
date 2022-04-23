@@ -2,8 +2,9 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Grid, styled } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
-import { nextQuestion, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { nextQuestion } from "../../reducers/waitingAreaSlice";
 import GameTitle from "../GameTitle/GameTitle";
 import PlayersScore from "../PlayersScore/PlayersScore";
 
@@ -63,7 +64,7 @@ export default function GameAnswer({ game, goodAnswer }: { game: IGame; goodAnsw
           </Grid>
           {isOwner && (
             <LoadingButton
-              loading={nextQuestionStatus === WaitingAreaStatus.Loading}
+              loading={nextQuestionStatus === FetchStatus.Loading}
               variant="contained"
               onClick={() => {
                 dispatch(nextQuestion(game._id));

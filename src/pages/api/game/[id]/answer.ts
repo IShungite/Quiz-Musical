@@ -54,7 +54,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
   await Player.findByIdAndUpdate(playerId, { answer, score: isAnswerGood ? currentPlayer.score + 1 : currentPlayer.score }, { new: true }).exec();
 
   const players = await Player.find({ gameId: query.id }).exec();
-  console.log(players);
   for (const player of players) {
     if (player.answer === "") {
       return res.status(200).json({ message: "Waiting for other players" });
