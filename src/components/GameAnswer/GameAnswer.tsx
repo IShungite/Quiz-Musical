@@ -1,7 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Grid } from "@mui/material";
 import React from "react";
-import ConfettiExplosion from "react-confetti-explosion";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
