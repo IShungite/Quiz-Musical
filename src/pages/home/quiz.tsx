@@ -1,14 +1,14 @@
 import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import GameAnswer from "../../../components/GameAnswer/GameAnswer";
-import GameDraft from "../../../components/GameDraft/GameDraft";
-import GameEnded from "../../../components/GameEnded/GameEnded";
-import GameFindMusic from "../../../components/GameFindMusic/GameFindMusic";
-import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
-import usePusher from "../../../hooks/usePusher";
-import { GameStatus, IGame } from "../../../models/Game";
-import { IPlayer } from "../../../models/Player";
+import GameAnswer from "../../components/GameAnswer/GameAnswer";
+import GameDraft from "../../components/GameDraft/GameDraft";
+import GameEnded from "../../components/GameEnded/GameEnded";
+import GameFindMusic from "../../components/GameFindMusic/GameFindMusic";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import usePusher from "../../hooks/usePusher";
+import { GameStatus, IGame } from "../../models/Game";
+import { IPlayer } from "../../models/Player";
 import {
   addCurrentPlayerLocal,
   clearAll,
@@ -17,8 +17,9 @@ import {
   setAnswerSelected,
   updateCurrentGameLocal,
   updateCurrentPlayersLocal,
-} from "../../../reducers/quizSlice";
-import { RouteUrls } from "../../../utility/config";
+} from "../../reducers/quizSlice";
+import { RouteUrls } from "../../utility/config";
+
 export default function Quiz() {
   const router = useRouter();
   const dispatch = useAppDispatch();
