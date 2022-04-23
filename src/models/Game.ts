@@ -60,7 +60,8 @@ const GameSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "draft",
+    enum: GameStatus,
+    default: GameStatus.Draft,
   },
   ownerId: {
     type: String,
