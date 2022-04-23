@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
@@ -22,6 +22,8 @@ export default function GameAnswer({ game, goodAnswer }: { game: IGame; goodAnsw
   return (
     <>
       <GameTitle game={game} />
+
+      <Box textAlign="center">{isSelectedGoodAnswer && <Confetti />}</Box>
 
       <Grid container justifyContent="space-evenly" spacing={4}>
         <Grid item textAlign="center">
@@ -46,7 +48,6 @@ export default function GameAnswer({ game, goodAnswer }: { game: IGame; goodAnsw
                   <CustomLoadingButton variant={isSelectedAnswer ? "contained" : "outlined"} disabled={true} disabledcolors={disabledColors}>
                     {answer}
                   </CustomLoadingButton>
-                  {isSelectedGoodAnswer && isSelectedAnswer && <Confetti />}
                 </Grid>
               );
             })}
