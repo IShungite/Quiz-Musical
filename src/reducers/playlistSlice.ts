@@ -1,25 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { FetchStatus } from "../models/FetchStatus";
 import { Playlist } from "../models/Playlist";
 import deezerApi from "../utility/deezerApi";
-
-export enum PlaylistStatus {
-  None,
-  Loading,
-  Finished,
-  Error,
-}
 
 interface PlaylistState {
   searchTerm: string;
   playlists: Playlist[];
-  status: PlaylistStatus;
+  status: FetchStatus;
   errorMessage?: string;
 }
 
 const initialPlaylist: PlaylistState = {
   searchTerm: "",
   playlists: [],
-  status: PlaylistStatus.None,
+  status: FetchStatus.None,
 };
 
 export const getPlaylists = createAsyncThunk<Playlist[], string, { rejectValue: string }>("playlist/getAll", async (searchTerm, thunkAPI) => {
@@ -37,7 +31,7 @@ const playlistSlice = createSlice({
   initialState: initialPlaylist,
   reducers: {
     clearState: (state) => {
-      state.status = PlaylistStatus.None;
+      state.status = FetchStatus.None;
       state.playlists = [];
     },
     clearPlaylists: (state) => {
@@ -50,14 +44,14 @@ const playlistSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getPlaylists.pending, (state) => {
-        state.status = PlaylistStatus.Loading;
+        state.status = FetchStatus.Loading;
       })
       .addCase(getPlaylists.fulfilled, (state, { payload }) => {
-        state.status = PlaylistStatus.Finished;
+        state.status = FetchStatus.Finished;
         state.playlists = [...payload];
       })
       .addCase(getPlaylists.rejected, (state, { payload }) => {
-        state.status = PlaylistStatus.Error;
+        state.status = FetchStatus.Error;
 
         state.errorMessage = payload;
       });
