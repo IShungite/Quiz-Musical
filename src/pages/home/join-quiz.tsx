@@ -1,12 +1,11 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Grid, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import CreatePlayerDialog from "../../components/CreatePlayerDialog/CreatePlayerDialog";
-import CreatePlayerForm from "../../components/CreatePlayerForm/CreatePlayerForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
-import { joinGame, resetCreatePlayerStatus, resetJoinGameStatus } from "../../reducers/quizSlice";
+import { joinGame, resetJoinGameStatus } from "../../reducers/quizSlice";
 import { RouteUrls } from "../../utility/config";
 
 export default function JoinQuiz() {
@@ -25,7 +24,8 @@ export default function JoinQuiz() {
   };
 
   const handleClickJoin = () => {
-    dispatch(joinGame({ gameId, playerId: currentPlayer._id }));
+    if (!currentPlayer) setDialogOpen(true);
+    else dispatch(joinGame({ gameId, playerId: currentPlayer._id }));
   };
 
   useEffect(() => {
