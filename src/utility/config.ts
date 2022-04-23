@@ -2,10 +2,10 @@ export enum RouteUrls {
   Index = "/",
   Home = "/home",
   NewQuiz = "/home/new-quiz",
+  JoinQuiz = "/home/join-quiz",
+  Quiz = "/home/quiz",
   Login = "/auth/login",
   Logout = "/auth/logout",
-  WaitingArea = "/home/waiting-area",
-  Quiz = "/home/quiz",
 }
 
 export const isDev = process.env.NODE_ENV === "development";

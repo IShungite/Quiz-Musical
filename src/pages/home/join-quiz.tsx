@@ -1,11 +1,12 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import CreatePlayerForm from "../../../components/CreatePlayerForm/CreatePlayerForm";
-import { useAppDispatch, useAppSelector } from "../../../hooks/reducer";
-import { joinGame, resetCreatePlayerStatus, WaitingAreaStatus } from "../../../reducers/waitingAreaSlice";
+import CreatePlayerForm from "../../components/CreatePlayerForm/CreatePlayerForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
+import { joinGame, resetCreatePlayerStatus, WaitingAreaStatus } from "../../reducers/waitingAreaSlice";
+import { RouteUrls } from "../../utility/config";
 
-export default function Join() {
+export default function JoinQuiz() {
   const dispatch = useAppDispatch();
 
   const { currentPlayer, joinGameStatus } = useAppSelector((state) => state.waitingArea);
@@ -20,7 +21,7 @@ export default function Join() {
 
   useEffect(() => {
     if (joinGameStatus === WaitingAreaStatus.Finished) {
-      router.push("/home/quiz");
+      router.push(RouteUrls.Quiz);
     }
   }, [joinGameStatus, router]);
 

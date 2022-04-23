@@ -56,10 +56,10 @@ export default function Quiz() {
   );
 
   const onShowGoodAnswer = useCallback(
-    (answer: string, players: IPlayer[]) => {
+    (answer: string, playersUpdated: IPlayer[]) => {
       console.log("onShowGoodAnswer");
       setGoodAnswer(answer);
-      dispatch(updateCurrentPlayersLocal(players));
+      dispatch(updateCurrentPlayersLocal(playersUpdated));
     },
     [dispatch]
   );
