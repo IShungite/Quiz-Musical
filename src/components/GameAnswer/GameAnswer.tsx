@@ -1,28 +1,13 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Grid, styled } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
 import { nextQuestion } from "../../reducers/quizSlice";
+import CustomLoadingButton from "../CustomLoadingButton/CustomLoadingButton";
 import GameTitle from "../GameTitle/GameTitle";
 import PlayersScore from "../PlayersScore/PlayersScore";
-
-interface CustomLoadingButtonProps {
-  disabledcolors: {
-    backgroundColor?: string;
-    textColor?: string;
-    borderColor?: string;
-  };
-}
-
-const CustomLoadingButton = styled(LoadingButton)<CustomLoadingButtonProps>(({ disabledcolors }) => ({
-  ":disabled": {
-    borderColor: disabledcolors.borderColor,
-    color: disabledcolors.textColor,
-    backgroundColor: disabledcolors.backgroundColor,
-  },
-}));
 
 export default function GameAnswer({ game, goodAnswer }: { game: IGame; goodAnswer: string }) {
   const dispatch = useAppDispatch();
