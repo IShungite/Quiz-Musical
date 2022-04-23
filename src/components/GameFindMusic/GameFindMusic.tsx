@@ -6,7 +6,7 @@ import useAudio from "../../hooks/useAudio";
 import { CreateAnswerDto } from "../../models/Answer";
 import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
-import { sendAnswer, setAnswerSelected } from "../../reducers/waitingAreaSlice";
+import { sendAnswer, setAnswerSelected } from "../../reducers/quizSlice";
 import GameTitle from "../GameTitle/GameTitle";
 import PlayersScore from "../PlayersScore/PlayersScore";
 
@@ -15,7 +15,7 @@ export default function GameFindMusic({ game }: { game: IGame }) {
 
   useAudio(game.currentTrackPreview);
 
-  const { currentPlayer, sendAnswerStatus, answerSelected, players } = useAppSelector((state) => state.waitingArea);
+  const { currentPlayer, sendAnswerStatus, answerSelected, players } = useAppSelector((state) => state.quiz);
 
   const onClickSendAnswer = (answer: string) => {
     if (!currentPlayer) return;

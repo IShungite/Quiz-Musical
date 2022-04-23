@@ -1,7 +1,7 @@
 import { Box, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { createPlayer } from "../../reducers/waitingAreaSlice";
+import { createPlayer } from "../../reducers/quizSlice";
 import { LoadingButton } from "@mui/lab";
 import { FetchStatus } from "../../models/FetchStatus";
 
@@ -9,7 +9,7 @@ export default function CreatePlayerForm() {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
 
-  const { createPlayerStatus } = useAppSelector((state) => state.waitingArea);
+  const { createPlayerStatus } = useAppSelector((state) => state.quiz);
 
   const onClickCreate = () => {
     dispatch(createPlayer({ name }));

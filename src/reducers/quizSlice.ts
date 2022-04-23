@@ -5,7 +5,7 @@ import { CreateGameDto, IGame, UpdateGameDto } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
 import gameApi from "../utility/gameApi";
 
-interface WaitingAreaState {
+interface QuizState {
   game?: IGame;
   players: IPlayer[];
   goodAnswer?: string;
@@ -20,7 +20,7 @@ interface WaitingAreaState {
   answerSelected?: string;
 }
 
-const initialWaitingArea: WaitingAreaState = {
+const initialQuizState: QuizState = {
   players: [],
   createGameStatus: FetchStatus.None,
   createPlayerStatus: FetchStatus.None,
@@ -30,19 +30,16 @@ const initialWaitingArea: WaitingAreaState = {
   sendAnswerStatus: FetchStatus.None,
 };
 
-export const createGame = createAsyncThunk<IGame, CreateGameDto, { rejectValue: string }>(
-  "waitingArea/createGame",
-  async (createGameDto, thunkAPI) => {
-    try {
-      return await gameApi.createGame(createGameDto);
-    } catch (err) {
-      const error = err as Error;
-      return thunkAPI.rejectWithValue(error.message);
-    }
+export const createGame = createAsyncThunk<IGame, CreateGameDto, { rejectValue: string }>("quiz/createGame", async (createGameDto, thunkAPI) => {
+  try {
+    return await gameApi.createGame(createGameDto);
+  } catch (err) {
+    const error = err as Error;
+    return thunkAPI.rejectWithValue(error.message);
   }
-);
+});
 
-export const getPlayers = createAsyncThunk<IPlayer[], string, { rejectValue: string }>("waitingArea/getPlayers", async (gameId, thunkAPI) => {
+export const getPlayers = createAsyncThunk<IPlayer[], string, { rejectValue: string }>("quiz/getPlayers", async (gameId, thunkAPI) => {
   try {
     return await gameApi.getPlayers(gameId);
   } catch (err) {
@@ -52,7 +49,7 @@ export const getPlayers = createAsyncThunk<IPlayer[], string, { rejectValue: str
 });
 
 export const startGame = createAsyncThunk<void, { gameId: string; updateGameDto: UpdateGameDto }, { rejectValue: string }>(
-  "waitingArea/startGame",
+  "quiz/startGame",
   async ({ gameId, updateGameDto }, thunkAPI) => {
     try {
       await gameApi.startGame(gameId, updateGameDto);
@@ -63,7 +60,7 @@ export const startGame = createAsyncThunk<void, { gameId: string; updateGameDto:
   }
 );
 
-export const nextQuestion = createAsyncThunk<void, string, { rejectValue: string }>("waitingArea/nextQuestion", async (gameId, thunkAPI) => {
+export const nextQuestion = createAsyncThunk<void, string, { rejectValue: string }>("quiz/nextQuestion", async (gameId, thunkAPI) => {
   try {
     await gameApi.nextQuestion(gameId);
   } catch (err) {
@@ -72,7 +69,7 @@ export const nextQuestion = createAsyncThunk<void, string, { rejectValue: string
   }
 });
 export const sendAnswer = createAsyncThunk<void, { gameId: string; createAnswerDto: CreateAnswerDto }, { rejectValue: string }>(
-  "waitingArea/sendAnswer",
+  "quiz/sendAnswer",
   async ({ gameId, createAnswerDto }, thunkAPI) => {
     try {
       await gameApi.sendAnswer(gameId, createAnswerDto);
@@ -84,7 +81,7 @@ export const sendAnswer = createAsyncThunk<void, { gameId: string; createAnswerD
 );
 
 export const joinGame = createAsyncThunk<IGame, { gameId: string; playerId: string }, { rejectValue: string }>(
-  "waitingArea/joinGame",
+  "quiz/joinGame",
   async ({ gameId, playerId }, thunkAPI) => {
     try {
       return await gameApi.joinGame(gameId, playerId);
@@ -96,7 +93,7 @@ export const joinGame = createAsyncThunk<IGame, { gameId: string; playerId: stri
 );
 
 export const createPlayer = createAsyncThunk<IPlayer, CreatePlayerDto, { rejectValue: string }>(
-  "waitingArea/createPlayer",
+  "quiz/createPlayer",
   async (createPlayerDto, thunkAPI) => {
     try {
       return await gameApi.createPlayer(createPlayerDto);
@@ -107,9 +104,9 @@ export const createPlayer = createAsyncThunk<IPlayer, CreatePlayerDto, { rejectV
   }
 );
 
-const waitingAreaSlice = createSlice({
-  name: "waitingArea",
-  initialState: initialWaitingArea,
+const quizSlice = createSlice({
+  name: "quiz",
+  initialState: initialQuizState,
   reducers: {
     updateCurrentGameLocal: (state, { payload }: PayloadAction<IGame>) => {
       state.game = payload;
@@ -236,5 +233,5 @@ export const {
   setAnswerSelected,
   clearAll,
   resetCreatePlayerStatus,
-} = waitingAreaSlice.actions;
-export default waitingAreaSlice.reducer;
+} = quizSlice.actions;
+export default quizSlice.reducer;

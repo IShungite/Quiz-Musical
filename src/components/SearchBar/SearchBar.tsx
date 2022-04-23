@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { InputBase } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
 import { useAppDispatch } from "../../hooks/reducer";
-import { clearPlaylists, getPlaylists } from "../../reducers/PlaylistSlice";
+import { clearPlaylists, getPlaylists } from "../../reducers/playlistSlice";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

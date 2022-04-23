@@ -8,7 +8,7 @@ import { useAppSelector } from "../../hooks/reducer";
 export default function NewQuiz() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { currentPlayer } = useAppSelector((state) => state.waitingArea);
+  const { currentPlayer } = useAppSelector((state) => state.quiz);
 
   useEffect(() => {
     if (!currentPlayer) {

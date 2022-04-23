@@ -3,7 +3,7 @@ import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/m
 import { Playlist } from "../../models/Playlist";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { createGame, resetCreateGameStatus } from "../../reducers/waitingAreaSlice";
+import { createGame, resetCreateGameStatus } from "../../reducers/quizSlice";
 import { CreateGameDto, GameMode } from "../../models/Game";
 import { RouteUrls } from "../../utility/config";
 import { FetchStatus } from "../../models/FetchStatus";
@@ -16,7 +16,7 @@ export default function MusicCard({ playlist }: Props) {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { createGameStatus, currentPlayer } = useAppSelector((state) => state.waitingArea);
+  const { createGameStatus, currentPlayer } = useAppSelector((state) => state.quiz);
 
   const onClick = () => {
     if (!currentPlayer) {

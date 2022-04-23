@@ -6,7 +6,7 @@ import { IPlayer } from "../../models/Player";
 import PlayersScore from "../PlayersScore/PlayersScore";
 
 export default function GameEnded({ game }: { game: IGame }) {
-  const { players } = useAppSelector((state) => state.waitingArea);
+  const { players } = useAppSelector((state) => state.quiz);
 
   return (
     <>

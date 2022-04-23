@@ -9,11 +9,11 @@ interface Props {
   onPlayerJoin: (player: IPlayer) => void;
   onPlayerLeave: (player: IPlayer) => void;
   onNextQuestion: (game: IGame) => void;
-  onShowGoodAnswer: (goodAnswer: string, players: IPlayer[]) => void;
+  onShowGoodAnswer: (goodAnswer: string, playersUpdated: IPlayer[]) => void;
 }
 
 export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer }: Props) {
-  const { game } = useAppSelector((state) => state.waitingArea);
+  const { game } = useAppSelector((state) => state.quiz);
 
   const [isConnected, setIsConnected] = React.useState(false);
 
@@ -27,6 +27,7 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion,
     const pusher = new pusherJs(pusherAppkey, {
       cluster: "eu",
     });
+
     console.log("init pusher on channel " + `quiz_room_${game._id}`);
 
     const channel = pusher.subscribe(`quiz_room_${game._id}`);
@@ -36,22 +37,22 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion,
       onPlayerJoin(player);
     });
 
-    channel.bind("player-leave", function (data: IPlayer) {
+    channel.bind("player-leave", function (player: IPlayer) {
       console.log("player-leave");
 
-      onPlayerLeave(data);
+      onPlayerLeave(player);
     });
 
-    channel.bind("next-question", function ({ game }: { game: IGame }) {
+    channel.bind("next-question", function ({ gameUpdated }: { gameUpdated: IGame }) {
       console.log("next-question");
 
-      onNextQuestion(game);
+      onNextQuestion(gameUpdated);
     });
 
-    channel.bind("show-good-answer", function ({ goodAnswer, players }: { goodAnswer: string; players: IPlayer[] }) {
+    channel.bind("show-good-answer", function ({ goodAnswer, playersUpdated }: { goodAnswer: string; playersUpdated: IPlayer[] }) {
       console.log("show-good-answer", goodAnswer);
 
-      onShowGoodAnswer(goodAnswer, players);
+      onShowGoodAnswer(goodAnswer, playersUpdated);
     });
 
     pusher.connection.bind("connected", function () {

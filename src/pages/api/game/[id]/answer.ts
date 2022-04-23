@@ -62,7 +62,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
 
   await pusher.trigger(`quiz_room_${query.id}`, "show-good-answer", {
     goodAnswer: gameAnswer.answer,
-    players,
+    playersUpdated: players,
   });
 
   res.status(200).json({});

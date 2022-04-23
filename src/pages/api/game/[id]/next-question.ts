@@ -65,7 +65,7 @@ const finishGame = async (game: IGame, res: NextApiResponse) => {
   }
 
   await pusher.trigger(`quiz_room_${game._id}`, "next-question", {
-    game: gameUpdated,
+    gameUpdated,
   });
 
   return res.status(200).json({ data: gameUpdated });
@@ -120,10 +120,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   await Promise.all(promisesResetPlayer);
 
   await pusher.trigger(`quiz_room_${query.id}`, "next-question", {
-    game: gameUpdated,
+    gameUpdated,
   });
 
-  res.status(200).json({ data: gameUpdated });
+  res.status(200).json({ message: "Next question" });
 };
 
 export default connectDB(handler);

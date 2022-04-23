@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import CreatePlayerForm from "../../components/CreatePlayerForm/CreatePlayerForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
-import { joinGame, resetCreatePlayerStatus } from "../../reducers/waitingAreaSlice";
+import { joinGame, resetCreatePlayerStatus } from "../../reducers/quizSlice";
 import { RouteUrls } from "../../utility/config";
 
 export default function JoinQuiz() {
   const dispatch = useAppDispatch();
 
-  const { currentPlayer, joinGameStatus } = useAppSelector((state) => state.waitingArea);
+  const { currentPlayer, joinGameStatus } = useAppSelector((state) => state.quiz);
 
   const [gameId, setGameId] = useState("");
 

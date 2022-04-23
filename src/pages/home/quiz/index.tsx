@@ -17,12 +17,12 @@ import {
   setAnswerSelected,
   updateCurrentGameLocal,
   updateCurrentPlayersLocal,
-} from "../../../reducers/waitingAreaSlice";
+} from "../../../reducers/quizSlice";
 import { RouteUrls } from "../../../utility/config";
 export default function Quiz() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { game, players } = useAppSelector((state) => state.waitingArea);
+  const { game, players } = useAppSelector((state) => state.quiz);
 
   const [goodAnswer, setGoodAnswer] = useState<string | undefined>(undefined);
 
@@ -41,10 +41,11 @@ export default function Quiz() {
   );
 
   const onNextQuestion = useCallback(
-    (newGame: IGame) => {
+    (gameUpdated: IGame) => {
       setGoodAnswer(undefined);
+      console.log({ gameUpdated });
       dispatch(setAnswerSelected(undefined));
-      dispatch(updateCurrentGameLocal(newGame));
+      dispatch(updateCurrentGameLocal(gameUpdated));
     },
     [dispatch]
   );
@@ -67,6 +68,7 @@ export default function Quiz() {
   }, [dispatch, game, isConnected, players.length]);
 
   useEffect(() => {
+    console.log(game);
     if (!game) router.push(RouteUrls.NewQuiz);
   }, [game, router]);
 
@@ -76,16 +78,16 @@ export default function Quiz() {
     };
   }, [dispatch]);
 
-  if (players.length === 0) return <>Loading...</>;
+  if (players.length === 0 || !game) return <>Loading...</>;
 
-  if (game?.status === GameStatus.Draft) return <GameDraft game={game} />;
+  if (game.status === GameStatus.Draft) return <GameDraft game={game} />;
 
-  if (game?.status === GameStatus.Started) {
+  if (game.status === GameStatus.Started) {
     if (goodAnswer) return <GameAnswer game={game} goodAnswer={goodAnswer} />;
 
     return <GameFindMusic game={game} />;
   }
-  if (game?.status === GameStatus.Finished) return <GameEnded game={game} />;
+  if (game.status === GameStatus.Finished) return <GameEnded game={game} />;
 
   return <Typography>Loading...</Typography>;
 }

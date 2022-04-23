@@ -4,12 +4,12 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
 import { IGame, UpdateGameDto } from "../../models/Game";
-import { startGame } from "../../reducers/waitingAreaSlice";
+import { startGame } from "../../reducers/quizSlice";
 
 export default function GameDraft({ game }: { game: IGame }) {
   const dispatch = useAppDispatch();
 
-  const { startGameStatus, players, currentPlayer } = useAppSelector((state) => state.waitingArea);
+  const { startGameStatus, players, currentPlayer } = useAppSelector((state) => state.quiz);
 
   const defaultNbSuggestions = 6;
   const defaultNbTracks = Math.min(10, game.totalPlaylistTracks ?? 10);

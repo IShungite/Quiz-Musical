@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import PlaylistSlice from "./PlaylistSlice";
-import waitingAreaSlice from "./waitingAreaSlice";
+import playlistSlice from "./playlistSlice";
+import quizSlice from "./quizSlice";
 
-const rootReducer = combineReducers({ playlist: PlaylistSlice, waitingArea: waitingAreaSlice });
+const rootReducer = combineReducers({ playlist: playlistSlice, quiz: quizSlice });
 
 export default rootReducer;

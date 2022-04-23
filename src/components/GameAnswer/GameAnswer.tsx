@@ -4,7 +4,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
-import { nextQuestion } from "../../reducers/waitingAreaSlice";
+import { nextQuestion } from "../../reducers/quizSlice";
 import GameTitle from "../GameTitle/GameTitle";
 import PlayersScore from "../PlayersScore/PlayersScore";
 
@@ -27,7 +27,7 @@ const CustomLoadingButton = styled(LoadingButton)<CustomLoadingButtonProps>(({ d
 export default function GameAnswer({ game, goodAnswer }: { game: IGame; goodAnswer: string }) {
   const dispatch = useAppDispatch();
 
-  const { nextQuestionStatus, answerSelected, players, currentPlayer } = useAppSelector((state) => state.waitingArea);
+  const { nextQuestionStatus, answerSelected, players, currentPlayer } = useAppSelector((state) => state.quiz);
 
   const isOwner = currentPlayer?._id === game.ownerId;
 
