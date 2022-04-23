@@ -32,6 +32,10 @@ const getPlayers = async (gameId: string): Promise<IPlayer[]> => {
   return tryFetch<IPlayer[]>(`${serverUrl}/api/game/${gameId}/players`);
 };
 
+const leaveGame = async (gameId: string, playerId: string): Promise<void> => {
+  await tryFetch<void>(`${serverUrl}/api/game/${gameId}/leave`, { body: playerId, method: "POST" });
+};
+
 const gameApi = {
   createGame,
   nextQuestion,
@@ -40,6 +44,7 @@ const gameApi = {
   joinGame,
   createPlayer,
   getPlayers,
+  leaveGame,
 };
 
 export default gameApi;

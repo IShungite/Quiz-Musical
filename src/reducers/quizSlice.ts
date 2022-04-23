@@ -84,7 +84,8 @@ export const joinGame = createAsyncThunk<IGame, { gameId: string; playerId: stri
   "quiz/joinGame",
   async ({ gameId, playerId }, thunkAPI) => {
     try {
-      return await gameApi.joinGame(gameId, playerId);
+      const game = await gameApi.joinGame(gameId, playerId);
+      return game;
     } catch (err) {
       const error = err as Error;
       return thunkAPI.rejectWithValue(error.message);
@@ -97,6 +98,19 @@ export const createPlayer = createAsyncThunk<IPlayer, CreatePlayerDto, { rejectV
   async (createPlayerDto, thunkAPI) => {
     try {
       return await gameApi.createPlayer(createPlayerDto);
+    } catch (err) {
+      const error = err as Error;
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const leaveGame = createAsyncThunk<string, { gameId: string; playerId: string }, { rejectValue: string }>(
+  "quiz/leaveGame",
+  async ({ gameId, playerId }, thunkAPI) => {
+    try {
+      await gameApi.leaveGame(gameId, playerId);
+      return playerId;
     } catch (err) {
       const error = err as Error;
       return thunkAPI.rejectWithValue(error.message);
@@ -221,6 +235,10 @@ const quizSlice = createSlice({
 
       .addCase(getPlayers.fulfilled, (state, { payload }) => {
         state.players = payload;
+      })
+
+      .addCase(leaveGame.fulfilled, (state, { payload }) => {
+        state.players = state.players.filter((player) => player._id !== payload);
       });
   },
 });

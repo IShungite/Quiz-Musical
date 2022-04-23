@@ -7,12 +7,13 @@ import { useAppSelector } from "./reducer";
 
 interface Props {
   onPlayerJoin: (player: IPlayer) => void;
-  onPlayerLeave: (player: IPlayer) => void;
+  onPlayerLeave: (playerId: string) => void;
   onNextQuestion: (game: IGame) => void;
   onShowGoodAnswer: (goodAnswer: string, playersUpdated: IPlayer[]) => void;
+  onUnsubscribe: (gameId: string) => void;
 }
 
-export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer }: Props) {
+export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer, onUnsubscribe }: Props) {
   const { game } = useAppSelector((state) => state.quiz);
 
   const [isConnected, setIsConnected] = React.useState(false);
@@ -21,8 +22,6 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion,
     if (!game?._id) return;
 
     pusherJs.logToConsole = false;
-
-    console.log("connect pusher");
 
     const pusher = new pusherJs(pusherAppkey, {
       cluster: "eu",
@@ -37,10 +36,10 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion,
       onPlayerJoin(player);
     });
 
-    channel.bind("player-leave", function (player: IPlayer) {
+    channel.bind("player-leave", function ({ playerId }: { playerId: string }) {
       console.log("player-leave");
 
-      onPlayerLeave(player);
+      onPlayerLeave(playerId);
     });
 
     channel.bind("next-question", function ({ gameUpdated }: { gameUpdated: IGame }) {
@@ -64,8 +63,9 @@ export default function usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion,
       console.log("unsubscribe pusher");
       pusher.unsubscribe(`quiz_room_${game._id}`);
       setIsConnected(false);
+      onUnsubscribe(game._id);
     };
-  }, [game?._id, onNextQuestion, onPlayerJoin, onPlayerLeave, onShowGoodAnswer]);
+  }, [game?._id, onNextQuestion, onPlayerJoin, onPlayerLeave, onShowGoodAnswer, onUnsubscribe]);
 
   return {
     isConnected,

@@ -11,6 +11,15 @@ type AnswerResponseType = {
   message?: string;
 };
 
+export const checkIfAllPlayersAnswered = async (gameId: string) => {
+  const players = await Player.find({ gameId }).exec();
+  for (const player of players) {
+    if (player.answer === "") return [false, players];
+  }
+
+  return [true, players];
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseType>) => {
   const { query, body } = req;
 
@@ -53,19 +62,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AnswerResponseT
 
   await Player.findByIdAndUpdate(playerId, { answer, score: isAnswerGood ? currentPlayer.score + 1 : currentPlayer.score }, { new: true }).exec();
 
-  const players = await Player.find({ gameId: query.id }).exec();
-  for (const player of players) {
-    if (player.answer === "") {
-      return res.status(200).json({ message: "Waiting for other players" });
-    }
+  const [allPlayersAnswered, players] = await checkIfAllPlayersAnswered(query.id);
+
+  if (allPlayersAnswered) {
+    await pusher.trigger(`quiz_room_${query.id}`, "show-good-answer", {
+      goodAnswer: gameAnswer.answer,
+      playersUpdated: players,
+    });
+
+    return res.status(200).json({});
   }
 
-  await pusher.trigger(`quiz_room_${query.id}`, "show-good-answer", {
-    goodAnswer: gameAnswer.answer,
-    playersUpdated: players,
-  });
-
-  res.status(200).json({});
+  return res.status(200).json({ message: "Waiting for other players" });
 };
 
 export default connectDB(handler);

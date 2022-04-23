@@ -13,6 +13,7 @@ import {
   addPlayerLocal,
   clearAll,
   getPlayers,
+  leaveGame,
   removePlayerLocal,
   setAnswerSelected,
   updateGameLocal,
@@ -23,7 +24,7 @@ import { RouteUrls } from "../../utility/config";
 export default function Quiz() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { game, players } = useAppSelector((state) => state.quiz);
+  const { game, players, currentPlayer } = useAppSelector((state) => state.quiz);
 
   const [goodAnswer, setGoodAnswer] = useState<string | undefined>(undefined);
 
@@ -35,8 +36,8 @@ export default function Quiz() {
   );
 
   const onPlayerLeave = useCallback(
-    (player: IPlayer) => {
-      dispatch(removePlayerLocal(player._id));
+    (playerId: string) => {
+      dispatch(removePlayerLocal(playerId));
     },
     [dispatch]
   );
@@ -44,7 +45,6 @@ export default function Quiz() {
   const onNextQuestion = useCallback(
     (gameUpdated: IGame) => {
       setGoodAnswer(undefined);
-      console.log({ gameUpdated });
       dispatch(setAnswerSelected(undefined));
       dispatch(updateGameLocal(gameUpdated));
     },
@@ -53,14 +53,23 @@ export default function Quiz() {
 
   const onShowGoodAnswer = useCallback(
     (answer: string, playersUpdated: IPlayer[]) => {
-      console.log("onShowGoodAnswer");
       setGoodAnswer(answer);
       dispatch(updatePlayersLocal(playersUpdated));
     },
     [dispatch]
   );
 
-  const { isConnected } = usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer });
+  const onUnsubscribe = useCallback(
+    (gameId: string) => {
+      if (currentPlayer) {
+        dispatch(leaveGame({ gameId, playerId: currentPlayer._id }));
+      }
+      dispatch(clearAll());
+    },
+    [currentPlayer, dispatch]
+  );
+
+  const { isConnected } = usePusher({ onPlayerJoin, onPlayerLeave, onNextQuestion, onShowGoodAnswer, onUnsubscribe });
 
   useEffect(() => {
     if (isConnected && game && players.length === 0) {
@@ -69,15 +78,8 @@ export default function Quiz() {
   }, [dispatch, game, isConnected, players.length]);
 
   useEffect(() => {
-    console.log(game);
     if (!game) router.push(RouteUrls.NewQuiz);
   }, [game, router]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearAll());
-    };
-  }, [dispatch]);
 
   if (players.length === 0 || !game) return <>Loading...</>;
 

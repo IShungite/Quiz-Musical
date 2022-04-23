@@ -11,6 +11,11 @@ headers.append("Origin", serverUrl);
 export const tryFetch = async <T>(url: string, init?: RequestInit): Promise<T> => {
   try {
     const response = await fetch(url, { headers, ...init });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
     return (await response.json()).data;
   } catch (error) {
     const err = error as Error;
