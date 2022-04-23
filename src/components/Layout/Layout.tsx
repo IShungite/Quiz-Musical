@@ -2,14 +2,15 @@ import { Container } from "@mui/material";
 import Head from "next/head";
 import Script from "next/script";
 import React from "react";
+import { AppName } from "../../utility/config";
 import AppBar from "../AppBar/AppBar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <Head>
-        <title>Quiz musical</title>
-        <meta name="description" content="Quiz musical" />
+        <title>{AppName}</title>
+        <meta name="description" content="Testez vos connaissances musicales via des playlists récupérées depuis Deezer" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

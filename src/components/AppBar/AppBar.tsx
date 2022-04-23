@@ -3,7 +3,7 @@ import { AppBar as MuiAppBar, Avatar, Box, Button, Container, IconButton, Menu, 
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import { RouteUrls } from "../../utility/config";
+import { AppName, RouteUrls } from "../../utility/config";
 
 type PageInfo = {
   name: string;
@@ -61,7 +61,7 @@ export default function AppBar() {
         <Toolbar disableGutters>
           {/* Normal screen */}
           <Typography variant="h6" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
-            Quiz musical
+            {AppName}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -102,7 +102,7 @@ export default function AppBar() {
           </Box>
           {/* Small Screen screen */}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            Game-Sense
+            {AppName}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {(session ? pagesLeftLogin : pagesLeftLogin).map((page) => (

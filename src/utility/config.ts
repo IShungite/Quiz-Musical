@@ -14,3 +14,5 @@ export const serverUrl = isDev ? "http://localhost:3000" : "https://quiz-musical
 
 // process.env.PUSHER_APP_KEY // RETURN UNDEFINED
 export const pusherAppkey = "97911bb6f66dab3d9595";
+
+export const AppName = "Quiz Musical";
