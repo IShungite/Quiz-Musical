@@ -1,7 +1,7 @@
 import { Box, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import { createPlayer } from "../../reducers/quizSlice";
+import { createPlayer, resetCreatePlayerStatus } from "../../reducers/quizSlice";
 import { LoadingButton } from "@mui/lab";
 import { FetchStatus } from "../../models/FetchStatus";
 
@@ -14,6 +14,13 @@ export default function CreatePlayerForm() {
   const onClickCreate = () => {
     dispatch(createPlayer({ name }));
   };
+
+  // Reset createPlayerStatus when component is unmounted
+  useEffect(() => {
+    return () => {
+      dispatch(resetCreatePlayerStatus());
+    };
+  }, [dispatch]);
 
   return (
     <Box>

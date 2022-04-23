@@ -1,10 +1,11 @@
+import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import CreatePlayerForm from "../../components/CreatePlayerForm/CreatePlayerForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
-import { joinGame, resetCreatePlayerStatus } from "../../reducers/quizSlice";
+import { joinGame, resetCreatePlayerStatus, resetJoinGameStatus } from "../../reducers/quizSlice";
 import { RouteUrls } from "../../utility/config";
 
 export default function JoinQuiz() {
@@ -28,7 +29,7 @@ export default function JoinQuiz() {
 
   useEffect(() => {
     return () => {
-      dispatch(resetCreatePlayerStatus());
+      dispatch(resetJoinGameStatus());
     };
   }, [dispatch]);
 
@@ -41,13 +42,14 @@ export default function JoinQuiz() {
         {currentPlayer ? (
           <Box>
             <TextField id="game-id" label="Numéro de la partie" onChange={handleChangeGameId} />
-            <Button
+            <LoadingButton
               onClick={() => {
                 dispatch(joinGame({ gameId: gameId, playerId: currentPlayer._id }));
               }}
+              loading={joinGameStatus === FetchStatus.Loading}
             >
               Rejoindre
-            </Button>
+            </LoadingButton>
           </Box>
         ) : (
           <CreatePlayerForm />

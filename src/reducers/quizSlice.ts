@@ -127,9 +127,7 @@ const quizSlice = createSlice({
       state.game = undefined;
       state.players = [];
       state.answerSelected = undefined;
-      state.createGameStatus = FetchStatus.None;
       state.startGameStatus = FetchStatus.None;
-      state.joinGameStatus = FetchStatus.None;
       state.nextQuestionStatus = FetchStatus.None;
       state.sendAnswerStatus = FetchStatus.None;
     },
@@ -138,6 +136,9 @@ const quizSlice = createSlice({
     },
     resetCreatePlayerStatus: (state) => {
       state.createPlayerStatus = FetchStatus.None;
+    },
+    resetJoinGameStatus: (state) => {
+      state.joinGameStatus = FetchStatus.None;
     },
   },
   extraReducers: (builder) => {
@@ -230,6 +231,7 @@ export const {
   addCurrentPlayerLocal,
   removeCurrentPlayerLocal,
   resetCreateGameStatus,
+  resetJoinGameStatus,
   setAnswerSelected,
   clearAll,
   resetCreatePlayerStatus,
