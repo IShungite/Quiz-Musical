@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { createPlayer, resetCreatePlayerStatus } from "../../reducers/quizSlice";
@@ -11,7 +11,7 @@ export default function CreatePlayerForm() {
 
   const { createPlayerStatus } = useAppSelector((state) => state.quiz);
 
-  const onClickCreate = () => {
+  const handleClickCreate = () => {
     dispatch(createPlayer({ name }));
   };
 
@@ -23,11 +23,15 @@ export default function CreatePlayerForm() {
   }, [dispatch]);
 
   return (
-    <Box>
-      <TextField label="Nouveau joueur" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <LoadingButton loading={createPlayerStatus === FetchStatus.Loading} onClick={onClickCreate}>
-        Créer
-      </LoadingButton>
-    </Box>
+    <Grid container sx={{ pt: 1 }} alignItems="center" spacing={1}>
+      <Grid item>
+        <TextField label="Nouveau joueur" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      </Grid>
+      <Grid item>
+        <LoadingButton variant="contained" loading={createPlayerStatus === FetchStatus.Loading} onClick={handleClickCreate}>
+          Créer
+        </LoadingButton>
+      </Grid>
+    </Grid>
   );
 }

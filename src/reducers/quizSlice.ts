@@ -108,16 +108,16 @@ const quizSlice = createSlice({
   name: "quiz",
   initialState: initialQuizState,
   reducers: {
-    updateCurrentGameLocal: (state, { payload }: PayloadAction<IGame>) => {
+    updateGameLocal: (state, { payload }: PayloadAction<IGame>) => {
       state.game = payload;
     },
-    updateCurrentPlayersLocal: (state, { payload }: PayloadAction<IPlayer[]>) => {
+    updatePlayersLocal: (state, { payload }: PayloadAction<IPlayer[]>) => {
       state.players = payload;
     },
-    addCurrentPlayerLocal: (state, { payload }: PayloadAction<IPlayer>) => {
+    addPlayerLocal: (state, { payload }: PayloadAction<IPlayer>) => {
       state.players = [...state.players, payload];
     },
-    removeCurrentPlayerLocal: (state, { payload }: PayloadAction<string>) => {
+    removePlayerLocal: (state, { payload }: PayloadAction<string>) => {
       state.players = state.players.filter((player) => player._id !== payload);
     },
     setAnswerSelected: (state, { payload }: PayloadAction<string | undefined>) => {
@@ -226,10 +226,10 @@ const quizSlice = createSlice({
 });
 
 export const {
-  updateCurrentGameLocal,
-  updateCurrentPlayersLocal,
-  addCurrentPlayerLocal,
-  removeCurrentPlayerLocal,
+  updateGameLocal,
+  updatePlayersLocal,
+  addPlayerLocal,
+  removePlayerLocal,
   resetCreateGameStatus,
   resetJoinGameStatus,
   setAnswerSelected,

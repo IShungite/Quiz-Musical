@@ -1,7 +1,8 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import CreatePlayerDialog from "../../components/CreatePlayerDialog/CreatePlayerDialog";
 import CreatePlayerForm from "../../components/CreatePlayerForm/CreatePlayerForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
 import { FetchStatus } from "../../models/FetchStatus";
@@ -15,10 +16,16 @@ export default function JoinQuiz() {
 
   const [gameId, setGameId] = useState("");
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const router = useRouter();
 
   const handleChangeGameId = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGameId(event.target.value);
+  };
+
+  const handleClickJoin = () => {
+    dispatch(joinGame({ gameId, playerId: currentPlayer._id }));
   };
 
   useEffect(() => {
@@ -33,28 +40,29 @@ export default function JoinQuiz() {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!currentPlayer) {
+      setDialogOpen(true);
+    }
+  }, [currentPlayer]);
+
   return (
     <>
       <Box textAlign="center">
         <Typography variant="h2">Rejoindre une partie</Typography>
       </Box>
-      <Box>
-        {currentPlayer ? (
-          <Box>
-            <TextField id="game-id" label="Numéro de la partie" onChange={handleChangeGameId} />
-            <LoadingButton
-              onClick={() => {
-                dispatch(joinGame({ gameId: gameId, playerId: currentPlayer._id }));
-              }}
-              loading={joinGameStatus === FetchStatus.Loading}
-            >
-              Rejoindre
-            </LoadingButton>
-          </Box>
-        ) : (
-          <CreatePlayerForm />
-        )}
-      </Box>
+
+      <Grid container alignItems="center" spacing={1}>
+        <Grid item>
+          <TextField id="game-id" label="Numéro de la partie" onChange={handleChangeGameId} />
+        </Grid>
+        <Grid item>
+          <LoadingButton variant="contained" onClick={handleClickJoin} loading={joinGameStatus === FetchStatus.Loading}>
+            Rejoindre
+          </LoadingButton>
+        </Grid>
+      </Grid>
+      <CreatePlayerDialog open={dialogOpen} setOpen={setDialogOpen} />
     </>
   );
 }

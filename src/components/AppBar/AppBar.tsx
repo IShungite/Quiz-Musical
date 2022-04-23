@@ -16,6 +16,7 @@ const pagesRight: PageInfo[] = [];
 const pagesLeftLogin: PageInfo[] = [
   { name: "Accueil", url: RouteUrls.Index },
   { name: "Créer un quiz", url: RouteUrls.NewQuiz },
+  { name: "Rejoindre un quiz", url: RouteUrls.JoinQuiz },
 ];
 
 export default function AppBar() {

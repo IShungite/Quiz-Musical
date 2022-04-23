@@ -10,13 +10,13 @@ import usePusher from "../../hooks/usePusher";
 import { GameStatus, IGame } from "../../models/Game";
 import { IPlayer } from "../../models/Player";
 import {
-  addCurrentPlayerLocal,
+  addPlayerLocal,
   clearAll,
   getPlayers,
-  removeCurrentPlayerLocal,
+  removePlayerLocal,
   setAnswerSelected,
-  updateCurrentGameLocal,
-  updateCurrentPlayersLocal,
+  updateGameLocal,
+  updatePlayersLocal,
 } from "../../reducers/quizSlice";
 import { RouteUrls } from "../../utility/config";
 
@@ -29,14 +29,14 @@ export default function Quiz() {
 
   const onPlayerJoin = useCallback(
     (player: IPlayer) => {
-      dispatch(addCurrentPlayerLocal(player));
+      dispatch(addPlayerLocal(player));
     },
     [dispatch]
   );
 
   const onPlayerLeave = useCallback(
     (player: IPlayer) => {
-      dispatch(removeCurrentPlayerLocal(player._id));
+      dispatch(removePlayerLocal(player._id));
     },
     [dispatch]
   );
@@ -46,7 +46,7 @@ export default function Quiz() {
       setGoodAnswer(undefined);
       console.log({ gameUpdated });
       dispatch(setAnswerSelected(undefined));
-      dispatch(updateCurrentGameLocal(gameUpdated));
+      dispatch(updateGameLocal(gameUpdated));
     },
     [dispatch]
   );
@@ -55,7 +55,7 @@ export default function Quiz() {
     (answer: string, playersUpdated: IPlayer[]) => {
       console.log("onShowGoodAnswer");
       setGoodAnswer(answer);
-      dispatch(updateCurrentPlayersLocal(playersUpdated));
+      dispatch(updatePlayersLocal(playersUpdated));
     },
     [dispatch]
   );
