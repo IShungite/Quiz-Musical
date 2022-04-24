@@ -13,19 +13,20 @@ export default function JoinQuiz() {
 
   const { currentPlayer, joinGameStatus } = useAppSelector((state) => state.quiz);
 
-  const [gameId, setGameId] = useState("");
+  const [joinCode, setJoinCode] = useState("");
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const router = useRouter();
 
-  const handleChangeGameId = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGameId(event.target.value);
+  const handleChangeJoinCode = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Join code is always in uppercase
+    setJoinCode(event.target.value.toUpperCase());
   };
 
   const handleClickJoin = () => {
     if (!currentPlayer) setDialogOpen(true);
-    else dispatch(joinGame({ gameId, playerId: currentPlayer._id }));
+    else dispatch(joinGame({ joinCode, playerId: currentPlayer._id }));
   };
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export default function JoinQuiz() {
 
       <Grid container alignItems="center" spacing={1}>
         <Grid item>
-          <TextField id="game-id" label="Numéro de la partie" onChange={handleChangeGameId} />
+          <TextField id="join-code" label="Code de la partie" onChange={handleChangeJoinCode} />
         </Grid>
         <Grid item>
           <LoadingButton variant="contained" onClick={handleClickJoin} loading={joinGameStatus === FetchStatus.Loading}>

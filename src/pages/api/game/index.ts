@@ -9,6 +9,15 @@ export type GameResponseType = {
   message?: string;
 };
 
+const joinCodeLength = 6;
+
+const generateJoinCode = (): string => {
+  return Math.random()
+    .toString(36)
+    .substring(2, joinCodeLength + 2)
+    .toUpperCase();
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseType>) => {
   const { method, body } = req;
 
@@ -28,6 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     totalPlaylistTracks: tracksWithPreview.length,
     playersId: [ownerId],
     status: GameStatus.Draft,
+    joinCode: generateJoinCode(),
     ownerId,
     currentTrackNb: 0,
     currentAnswerSuggestions: [],

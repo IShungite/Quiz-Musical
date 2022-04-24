@@ -1,5 +1,5 @@
 import { CreateAnswerDto } from "../models/Answer";
-import { CreateGameDto, IGame, UpdateGameDto } from "../models/Game";
+import { CreateGameDto, IGame, JoinGameDto, UpdateGameDto } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
 import { serverUrl } from "./config";
 import { tryFetch } from "./utility";
@@ -24,8 +24,8 @@ const createPlayer = async (createPlayerDto: CreatePlayerDto): Promise<IPlayer> 
   return tryFetch<IPlayer>(`${serverUrl}/api/player`, { body: JSON.stringify(createPlayerDto), method: "POST" });
 };
 
-const joinGame = async (gameId: string, playerId: string): Promise<IGame> => {
-  return tryFetch<IGame>(`${serverUrl}/api/game/${gameId}/join`, { body: playerId, method: "POST" });
+const joinGame = async (joinGameDto: JoinGameDto): Promise<IGame> => {
+  return tryFetch<IGame>(`${serverUrl}/api/game/join`, { body: JSON.stringify(joinGameDto), method: "POST" });
 };
 
 const getPlayers = async (gameId: string): Promise<IPlayer[]> => {

@@ -43,7 +43,7 @@ export default function GameDraft({ game }: { game: IGame }) {
     <>
       <Box textAlign="center">
         <Typography variant="h2">Salle d&apos;attente</Typography>
-        <Typography variant="h6">numéro de la partie: {game._id}</Typography>
+        <Typography variant="h6">Code de la partie: {game.joinCode}</Typography>
       </Box>
 
       <Typography variant="h4">Mode: {game.mode}</Typography>

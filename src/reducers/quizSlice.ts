@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreateAnswerDto } from "../models/Answer";
 import { FetchStatus } from "../models/FetchStatus";
-import { CreateGameDto, IGame, UpdateGameDto } from "../models/Game";
+import { CreateGameDto, IGame, JoinGameDto, UpdateGameDto } from "../models/Game";
 import { CreatePlayerDto, IPlayer } from "../models/Player";
 import gameApi from "../utility/gameApi";
 
@@ -80,18 +80,14 @@ export const sendAnswer = createAsyncThunk<void, { gameId: string; createAnswerD
   }
 );
 
-export const joinGame = createAsyncThunk<IGame, { gameId: string; playerId: string }, { rejectValue: string }>(
-  "quiz/joinGame",
-  async ({ gameId, playerId }, thunkAPI) => {
-    try {
-      const game = await gameApi.joinGame(gameId, playerId);
-      return game;
-    } catch (err) {
-      const error = err as Error;
-      return thunkAPI.rejectWithValue(error.message);
-    }
+export const joinGame = createAsyncThunk<IGame, JoinGameDto, { rejectValue: string }>("quiz/joinGame", async (joinGameDto, thunkAPI) => {
+  try {
+    return await gameApi.joinGame(joinGameDto);
+  } catch (err) {
+    const error = err as Error;
+    return thunkAPI.rejectWithValue(error.message);
   }
-);
+});
 
 export const createPlayer = createAsyncThunk<IPlayer, CreatePlayerDto, { rejectValue: string }>(
   "quiz/createPlayer",

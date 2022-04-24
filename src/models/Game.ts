@@ -6,6 +6,7 @@ export interface IGameBase {
   totalPlaylistTracks: number;
   playersId: string[];
   status: GameStatus;
+  joinCode: string;
   ownerId: string;
   maxTracks: number;
   maxSuggestions: number;
@@ -28,6 +29,11 @@ export interface CreateGameDto {
 export interface UpdateGameDto {
   maxTracks: number;
   maxSuggestions: number;
+}
+
+export interface JoinGameDto {
+  joinCode: string;
+  playerId: string;
 }
 
 export enum GameMode {
@@ -62,6 +68,10 @@ const GameSchema = new mongoose.Schema({
     type: String,
     enum: GameStatus,
     default: GameStatus.Draft,
+  },
+  joinCode: {
+    type: String,
+    required: true,
   },
   ownerId: {
     type: String,
