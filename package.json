@@ -30,6 +30,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.2",
     "react-timer-hook": "^3.0.5",
+    "react-use": "^17.3.2",
     "spotify-web-api-node": "^5.0.2",
     "use-debounce": "^7.0.1",
     "yarn": "^1.22.18"

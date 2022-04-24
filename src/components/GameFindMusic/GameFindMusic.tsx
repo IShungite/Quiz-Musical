@@ -1,19 +1,22 @@
 import { LoadingButton } from "@mui/lab";
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/reducer";
-import useAudio from "../../hooks/useAudio";
 import { CreateAnswerDto } from "../../models/Answer";
 import { FetchStatus } from "../../models/FetchStatus";
 import { IGame } from "../../models/Game";
 import { sendAnswer, setAnswerSelected } from "../../reducers/quizSlice";
 import GameTitle from "../GameTitle/GameTitle";
 import PlayersScore from "../PlayersScore/PlayersScore";
+import { useAudio } from "react-use";
 
 export default function GameFindMusic({ game }: { game: IGame }) {
   const dispatch = useAppDispatch();
 
-  useAudio(game.currentTrackPreview);
+  const [audio] = useAudio({
+    src: game.currentTrackPreview,
+    autoPlay: true,
+  });
 
   const { currentPlayer, sendAnswerStatus, answerSelected, players } = useAppSelector((state) => state.quiz);
 
@@ -27,6 +30,7 @@ export default function GameFindMusic({ game }: { game: IGame }) {
 
   return (
     <>
+      {audio}
       <GameTitle game={game} />
 
       <Grid container justifyContent="space-evenly" spacing={4}>
