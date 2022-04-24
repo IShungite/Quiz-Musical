@@ -13,8 +13,9 @@ import { useAudio } from "react-use";
 export default function GameFindMusic({ game }: { game: IGame }) {
   const dispatch = useAppDispatch();
 
-  const [audio, state, controls] = useAudio({
+  const [audio] = useAudio({
     src: game.currentTrackPreview,
+    autoPlay: true,
   });
 
   const { currentPlayer, sendAnswerStatus, answerSelected, players } = useAppSelector((state) => state.quiz);
@@ -27,15 +28,9 @@ export default function GameFindMusic({ game }: { game: IGame }) {
     dispatch(setAnswerSelected(answer));
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      controls.play();
-    }, 0);
-  }, []);
-
   return (
     <>
-      <div>audio {audio}</div>
+      {audio}
       <GameTitle game={game} />
 
       <Grid container justifyContent="space-evenly" spacing={4}>
