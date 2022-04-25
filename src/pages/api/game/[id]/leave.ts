@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
     return res.status(404).json({ message: "Game not found" });
   }
 
-  const player = await Player.findByIdAndUpdate(body, { gameId: null }).exec();
+  const player = await Player.findByIdAndUpdate(body, { gameId: null, score: 0, answer: "" }).exec();
 
   if (!player) {
     return res.status(404).json({ message: "Player not found" });
