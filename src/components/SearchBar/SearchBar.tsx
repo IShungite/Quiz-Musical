@@ -64,7 +64,7 @@ export default function SearchBar() {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <StyledInputBase onChange={handleChange} placeholder="Search…" inputProps={{ "aria-label": "search" }} fullWidth />
+      <StyledInputBase onChange={handleChange} placeholder="Chercher..." inputProps={{ "aria-label": "search" }} fullWidth />
     </Search>
   );
 }

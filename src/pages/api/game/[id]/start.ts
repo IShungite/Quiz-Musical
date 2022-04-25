@@ -28,10 +28,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<GameResponseTyp
   }
 
   const updateGameDto = JSON.parse(body);
-  // const { ownerId, ...updateGameDto } = body;
+
+  // const { ownerId } = body;
 
   // if (game.ownerId !== ownerId) {
-  //   return res.status(400).json({ message: "Only the owner can modify the game" });
+  //   return res.status(400).json({ message: "Only the owner can start the game" });
   // }
 
   const gameUpdated = await Game.findByIdAndUpdate(
