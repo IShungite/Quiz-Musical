@@ -51,10 +51,10 @@ export default function GameDraft({ game }: { game: IGame }) {
       {isOwner && (
         <>
           <Typography variant="h4">Options</Typography>
-          <Typography variant="h5">Nombre de suggestions: {maxSuggestions} </Typography>
+          <Typography variant="h5">Nombre de propositions: {maxSuggestions} </Typography>
           <Slider
             sx={{ maxWidth: 350 }}
-            aria-label="Nombre de suggestions"
+            aria-label="Nombre de propositions"
             defaultValue={defaultNbSuggestions}
             step={1}
             marks
