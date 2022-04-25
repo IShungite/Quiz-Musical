@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).json({ message: "Wrong game id" });
   }
 
-  const maxPlaylists = 15;
+  const maxPlaylists = 20;
 
   const playlists = await tryFetch<Playlist[]>(`https://api.deezer.com/search/playlist?limit=${maxPlaylists}&q=${query.searchTerm}`);
 
